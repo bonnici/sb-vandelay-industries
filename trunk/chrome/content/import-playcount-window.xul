@@ -25,8 +25,8 @@
       
         <tabbox flex="1"> 
           <tabs> 
-            <tab label="&vandelay-industries.inlibrary-header.label;"/> 
-            <tab label="&vandelay-industries.notinlibrary-header.label;"/> 
+            <tab id="in-library-tab-panel"/> 
+            <tab id="not-in-library-tab-panel"/> 
           </tabs> 
           <tabpanels flex="1"> 
             <tabpanel id="in-library">
@@ -70,28 +70,36 @@
                   </tree>
                 </hbox>
                 <hbox align="center">
-                  <label value="&vandelay-industries.edit-artist.label;"/> 
-                  <!-- <textbox id="edit-artist-textbox" flex="1" type="autocomplete" autocompletepopup="mypopup" oninput="PlayCountImporterDialog.Controller.onEditArtistInput(event);"/> -->
-                  <menulist id="edit-artist-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditArtistInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditArtistInput(event);" >
-                    <menupopup id="edit-artist-list" />
-                  </menulist>
-                  <checkbox id="edit-artist-checkbox" disabled="true" />
-                  <spacer width="5" />
-                  <label value="&vandelay-industries.edit-title.label;"/> 
-                  <menulist id="edit-track-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditTrackInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditTrackInput(event);" > 
-                    <menupopup id="edit-track-list" />
-                  </menulist>
-                  <checkbox id="edit-track-checkbox" disabled="true" />
-                  <spacer width="5" />
-                  <button id="update-button" label="&vandelay-industries.update-button.label;" />
+                  <vbox flex="1">
+				            <grid>
+                      <columns>
+                        <column />
+                        <column flex="1" />
+                        <column />
+                      </columns>
+                      <rows>
+                        <row align="center">
+                          <label value="&vandelay-industries.edit-artist.label;"/> 
+                          <menulist id="edit-artist-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditArtistInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditArtistInput(event);" >
+                            <menupopup id="edit-artist-list" />
+                          </menulist>
+                          <checkbox id="edit-artist-checkbox" disabled="true" />
+                        </row>
+                        <row align="center">
+                          <label value="&vandelay-industries.edit-title.label;"/> 
+                          <menulist id="edit-track-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditTrackInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditTrackInput(event);" > 
+                            <menupopup id="edit-track-list" />
+                          </menulist>
+                          <checkbox id="edit-track-checkbox" disabled="true" />
+                        </row>
+                      </rows>
+                    </grid>
+                  </vbox>
+                  <vbox>
+                    <button id="remove-button" label="&vandelay-industries.remove-button.label;" />
+                  </vbox>
                 </hbox>
               </vbox>
-              
-              <popup id="mypopup">
-                <menuitem label="test" />
-                <menuitem label="test2" />
-                <menuitem label="atest" />
-              </popup>
               
             </tabpanel>
           </tabpanels>

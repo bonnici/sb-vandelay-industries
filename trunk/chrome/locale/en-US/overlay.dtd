@@ -5,8 +5,7 @@
 <!ENTITY vandelay-industries.artist-header.label "Artist">
 <!ENTITY vandelay-industries.title-header.label "Title">
 <!ENTITY vandelay-industries.playcount-header.label "Play Count">
-<!ENTITY vandelay-industries.inlibrary-header.label "Found In Library">
-<!ENTITY vandelay-industries.notinlibrary-header.label "Not Found In Library">
+<!ENTITY vandelay-industries.inlibrary-header.label "In Library">
 <!ENTITY vandelay-industries.importquestion-header.label "Import?">
 <!ENTITY vandelay-industries.import-playcount-group.label "Import Play Counts">
 <!ENTITY vandelay-industries.overwrite-if-greater.label "Only overwrite play count if it is more than the current play count">
@@ -19,4 +18,4 @@
 <!ENTITY vandelay-industries.lib-title-header.label "Library Title">
 <!ENTITY vandelay-industries.edit-artist.label "Artist:">
 <!ENTITY vandelay-industries.edit-title.label "Title:">
-<!ENTITY vandelay-industries.update-button.label "Update">
+<!ENTITY vandelay-industries.remove-button.label "Remove">
