@@ -24,6 +24,7 @@ const LIBRARY_GETTRACKS_METHOD = "library.getTracks";
 const REQUEST_SUCCESS_CODE = 200
 
 const NUM_IMPORTS_PER_CALL = 50;
+const NUM_CLEARS_PER_CALL = 200;
 
 PlayCountImporterDialog.Controller = {
   onLoad: function() {
@@ -69,7 +70,7 @@ PlayCountImporterDialog.Controller = {
         getColumnProperties: function(colid,col,props) {}, 
         isEditable: function(row,col) { return this.playCountArray[row].songGuids.length > 0; },
         getCellValue: function(row,col) { return this.playCountArray[row].importIt ? "true" : "false"; },
-        setCellValue: function(row,col,string) { this.playCountArray[row].importIt = (string == "true" ? true : false); },
+        setCellValue: function(row,col,string) { this.playCountArray[row].importIt = (string == "true" ? true : false); this.treebox.invalidateRow(row); },
         update: function() { this.rowCount = this.playCountArray.length; } 
     };
     
@@ -118,8 +119,8 @@ PlayCountImporterDialog.Controller = {
 
     this._findPlayCountsButton = document.getElementById("find-playcount-button");
     this._findPlayCountsButton.addEventListener("command", 
-          //function() { controller.findOrStopPlayCounts(); }, false);
-          function() { controller.fakePopulate(); }, false);
+          function() { controller.findOrStopPlayCounts(); }, false);
+          //function() { controller.fakePopulate(); }, false);
     usernameField.addEventListener("keypress", 
           function(event) { controller.onUsernameKeypress(event); }, false);
     usernameField.focus();
@@ -388,12 +389,12 @@ PlayCountImporterDialog.Controller = {
   },
   
   doClearPlayCounts: function() {  	
-  	var start = this._curClearCall * NUM_IMPORTS_PER_CALL;
+  	var start = this._curClearCall * NUM_CLEARS_PER_CALL;
     
     if (start < LibraryUtils.mainLibrary.length) {
       this._setStatus(this._strings.getFormattedString("clearingProgressStatus", [start == 0 ? 1 : start, LibraryUtils.mainLibrary.length]), ((start+1) / LibraryUtils.mainLibrary.length) * 100);
       
-      var end = start + NUM_IMPORTS_PER_CALL;
+      var end = start + NUM_CLEARS_PER_CALL;
       if (end > LibraryUtils.mainLibrary.length) {
         end = LibraryUtils.mainLibrary.length;
       }
@@ -409,7 +410,7 @@ PlayCountImporterDialog.Controller = {
     else
     {
       this._clearStatus();
-  	  alert(this._strings.getStrings("clearingDone"));
+  	  alert(this._strings.getString("clearingDone"));
   	  this._endClearing();
     }
   },
@@ -634,7 +635,7 @@ PlayCountImporterDialog.Controller = {
       var songGuids = this._findSongInLibrary(artistName, trackName);
       
       if (songGuids.length > 0) {
-        var newItem = {artistName: artistName, trackName: trackName, playCount: playCount, songGuids: songGuids};
+        var newItem = {artistName: artistName, trackName: trackName, playCount: playCount, songGuids: songGuids, importIt: true};
         this._treeView.playCountArray.push(newItem);
       }
       else {
