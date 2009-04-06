@@ -103,6 +103,14 @@ PlayCountImporterDialog.Controller = {
           this.nilPlayCountArray[row].libArtistName = artist;
           this.nilPlayCountArray[row].libTrackName = track;
           this.nilPlayCountArray[row].songGuids = guids; 
+          this.treebox.invalidateRow(row);
+        },
+        removeItem: function(row) { 
+          if (row >= 0 && row < this.nilPlayCountArray.length) {
+            this.nilPlayCountArray.splice(row,1);
+            this.update();
+            this.treebox.invalidate();
+          }
         }
     };
     
@@ -138,13 +146,23 @@ PlayCountImporterDialog.Controller = {
     this._clearPlayCountsButton.setAttribute("label", this._strings.getString("resetButtonResetLabel"));
     this._clearStatus();
     
+    this._inLibraryTabPanel = document.getElementById("in-library-tab-panel");
+    this._notInLibraryTabPanel = document.getElementById("not-in-library-tab-panel");
+    this._updateTabPanelTitles();
+    
+    this._inLibraryTree = document.getElementById("playcount-list");
+    this._notInLibraryTree = document.getElementById("not-in-library-list");
+    
     this._artistField = document.getElementById("edit-artist-textbox");
     this._artistCheck = document.getElementById("edit-artist-checkbox");
     this._trackField = document.getElementById("edit-track-textbox");
     this._trackCheck = document.getElementById("edit-track-checkbox");
-    this._updateButton = document.getElementById("update-button");
-    this._updateButton.addEventListener("command", 
-          function() { controller.onUpdateNilSelection(); }, false);
+    //this._updateButton = document.getElementById("update-button");
+    //this._updateButton.addEventListener("command", 
+    //      function() { controller.onUpdateNilSelection(); }, false);
+    this._removeButton = document.getElementById("remove-button");
+    this._removeButton.addEventListener("command", 
+          function() { controller.onRemoveNilSelection(); }, false);
           
     this._selectedRow = -1;
   },
@@ -189,14 +207,20 @@ PlayCountImporterDialog.Controller = {
     this._checkArtistIfFound();
     this._enableUpdateIfInLibrary();
   },
-  
+  /*
   onUpdateNilSelection: function(event) {
     var guids = this._findSongInLibrary(this._artistField.value, this._trackField.value);
     if (guids.length > 0) { // should always be >0
       //todo use a function on the tree to get selected row
       this._nilTreeView.setLibInfo(this._selectedRow, this._artistField.value, this._trackField.value, guids);
-      //todo refresh 
     }
+  },
+  */
+  
+  onRemoveNilSelection: function(event) {
+    this._nilTreeView.removeItem(this._notInLibraryTree.currentIndex);
+    this._notInLibraryTree.view = this._nilTreeView;
+    //fire off a onNilTreeSelection
   },
 
   onEditTrackInput: function(event) {
@@ -250,6 +274,9 @@ PlayCountImporterDialog.Controller = {
   },
   
   doFindPlayCounts: function() {    
+    
+    //todo show only 1 error if the name is wrong
+    
     if (this._curLibraryPage == 1) {      
       var response = this._getLibraryPage(this._lastFmUsername, 1);
 
@@ -263,21 +290,27 @@ PlayCountImporterDialog.Controller = {
         return;
       }
       
+      //alert(response.responseText);
+      
       this._totalLibraryPages = this._getLibraryTotalPages(response.responseXML);
 
+/*
       if (this._totalLibraryPages < 1) {
         alert(this._strings.getString("noLibraryPagesError"));
         this._endFinding();
         return;
       }
+*/
+      //todo check with 2 pages
+      //todo remove noLibraryPagesError
       
       this._processLibraryPage(response.responseXML);
       this._curLibraryPage = 2;
       setTimeout("PlayCountImporterDialog.Controller.doFindPlayCounts()", 0);
     }
     else if (this._curLibraryPage <= this._totalLibraryPages) {
-      this._setStatus(this._strings.getFormattedString("gettingPlayCountProgressStatus", [this._curLibraryPage, this._totalLibraryPages],          
-                      (this._curLibraryPage / this._totalLibraryPages) * 100));
+      this._setStatus(this._strings.getFormattedString("gettingPlayCountProgressStatus", [this._curLibraryPage, this._totalLibraryPages]),          
+                      ((this._curLibraryPage / this._totalLibraryPages) * 100));
 
       var response = this._getLibraryPage(this._lastFmUsername, this._curLibraryPage);
 
@@ -296,7 +329,15 @@ PlayCountImporterDialog.Controller = {
     }
     else {
       this._clearStatus();
-      alert(this._strings.getFormattedString("gettingPlayCountDone", [this._treeView.playCountArray.length]));
+      if (this._treeView.playCountArray.length == 0 && this._nilTreeView.nilPlayCountArray.length == 0) {
+        alert(this._strings.getString("gettingPlayCountDoneNoneFound"));
+      }
+      else if (this._nilTreeView.nilPlayCountArray.length == 0) {
+        alert(this._strings.getFormattedString("gettingPlayCountDoneAllFound", [this._treeView.playCountArray.length]));
+      }
+      else {
+        alert(this._strings.getFormattedString("gettingPlayCountDoneNotAllFound", [this._treeView.playCountArray.length, this._nilTreeView.nilPlayCountArray.length]));
+      }
       this._endFinding();
     }
   },
@@ -482,6 +523,7 @@ PlayCountImporterDialog.Controller = {
   
   _clearPlayCountList: function() {
     this._treeView.playCountArray = [];
+    this._nilTreeView.nilPlayCountArray = [];
     this._updateTreeViews();
   },
   
@@ -756,9 +798,10 @@ PlayCountImporterDialog.Controller = {
   
   _updateTreeViews: function() {
     this._treeView.update();
-    document.getElementById("playcount-list").view = this._treeView;
+    this._inLibraryTree.view = this._treeView;
     this._nilTreeView.update();
-    document.getElementById("not-in-library-list").view = this._nilTreeView;
+    this._notInLibraryTree.view = this._nilTreeView;
+    this._updateTabPanelTitles();
   },
   
   //todo change name
@@ -829,12 +872,34 @@ PlayCountImporterDialog.Controller = {
   	}
   },
   
+  //todo rename
   _enableUpdateIfInLibrary: function() {
     //todo check for empty
     //todo disable button if nothing selected
     //todo disable if it is the same as what is in the list already
+    //todo disable popup list if there is nothing in it
     var guids = this._findSongInLibrary(this._artistField.value, this._trackField.value);
-    this._updateButton.setAttribute("disabled", guids.length > 0 ? "false" : "true");
+    //this._updateButton.setAttribute("disabled", guids.length > 0 ? "false" : "true");
+    if (guids.length > 0) {
+      //todo use a function on the tree to get selected row
+      this._nilTreeView.setLibInfo(this._selectedRow, this._artistField.value, this._trackField.value, guids);
+    }
+  },  
+  
+  _updateTabPanelTitles: function() {
+    var inLibraryTabTitle = this._strings.getString("inLibraryTabPanelLabel");
+    var numInLibraryItems = this._treeView.playCountArray.length;
+    if (numInLibraryItems > 0) {
+      inLibraryTabTitle = inLibraryTabTitle + " (" + numInLibraryItems + ")";
+    }
+    this._inLibraryTabPanel.setAttribute("label", inLibraryTabTitle);
+    
+    var notInLibraryTabTitle = this._strings.getString("notInLibraryTabPanelLabel");
+    var numNotInLibraryItems = this._nilTreeView.nilPlayCountArray.length;
+    if (numNotInLibraryItems > 0) {
+      notInLibraryTabTitle = notInLibraryTabTitle + " (" + numNotInLibraryItems + ")";
+    }
+    this._notInLibraryTabPanel.setAttribute("label", notInLibraryTabTitle);
   }
 };
 
