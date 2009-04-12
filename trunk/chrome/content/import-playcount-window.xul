@@ -96,6 +96,7 @@
                     </grid>
                   </vbox>
                   <vbox>
+                    <checkbox id="show-fixed-checkbox" label="&vandelay-industries.show-fixed-checkbox.label;" checked="true" onselect="PlayCountImporterDialog.Controller.onShowFixedChecked(event);" />
                     <button id="remove-button" label="&vandelay-industries.remove-button.label;" />
                   </vbox>
                 </hbox>
