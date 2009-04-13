@@ -74,6 +74,7 @@ PlayCountImporterDialog.Controller = {
     
     this._nilTreeView = {  
         nilPlayCountArray: [],
+        hiddenPlayCountArray: [],
         rowCount: 0,
         getCellText : function(row,column) {  
           if (column.id == "nil-lfm-artist-column") return this.getLfmArtist(row);
@@ -202,8 +203,14 @@ PlayCountImporterDialog.Controller = {
     this._trackTextHasChanged();
   },
   
-  onShowFixedChecked: function(event) {
-    
+  onShowFixedCheckCommand: function(event) {
+    var checked = this._showFixedCheck.getAttribute("checked") == "true";
+    if (checked) {
+      this._showAllNilRows();
+    }
+    else {
+      this._hideFixedlNilRows();
+    }
   },
   
   findOrStopPlayCounts: function() {
@@ -350,30 +357,21 @@ PlayCountImporterDialog.Controller = {
   doImportPlayCounts: function() {    
     var start = this._curImportCall * NUM_IMPORTS_PER_CALL;
     
-    var numExactMatches = this._treeView.playCountArray.length;
-    var numInexactMatches = this._nilTreeView.nilPlayCountArray.length;
-    var totalToImport = numExactMatches + numInexactMatches;
+    var combinedArrays = this._treeView.playCountArray.concat(this._nilTreeView.nilPlayCountArray);
+    combinedArrays = combinedArrays.concat(this._nilTreeView.hiddenPlayCountArray);
     
-    if (start < totalToImport)
+    if (start < combinedArrays.length)
     {
-      this._setStatus(this._strings.getFormattedString("importingProgressStatus", [start == 0 ? 1 : start, totalToImport]), ((start+1) / totalToImport) * 100);
+      this._setStatus(this._strings.getFormattedString("importingProgressStatus", [start == 0 ? 1 : start, combinedArrays.length]), ((start+1) / combinedArrays.length) * 100);
       
       var end = start + NUM_IMPORTS_PER_CALL;
-      if (end > totalToImport) {
-        end = totalToImport;
+      if (end > combinedArrays.length) {
+        end = combinedArrays.length;
       }
       
       for (var index = start; index < end; index++) {
-        if (index < numExactMatches) {
-          if (this._treeView.playCountArray[index].importIt) {
-            this._setPlayCounts(this._treeView.playCountArray[index].songGuids, this._treeView.playCountArray[index].playCount); 
-          }
-        }
-        else {
-          var adjustedIndex = index - numExactMatches;
-          if (adjustedIndex < numInexactMatches && this._nilTreeView.nilPlayCountArray[adjustedIndex].songGuids.length > 0) {
-            this._setPlayCounts(this._nilTreeView.nilPlayCountArray[adjustedIndex].songGuids, this._nilTreeView.nilPlayCountArray[adjustedIndex].playCount); 
-          }
+        if (combinedArrays[index].importIt ) {
+          this._setPlayCounts(combinedArrays[index].songGuids, combinedArrays[index].playCount); 
         }
       }
       
@@ -679,7 +677,7 @@ PlayCountImporterDialog.Controller = {
         this._treeView.playCountArray.push(newItem);
       }
       else {
-        var newItem = {lfmArtistName: artistName, lfmTrackName: trackName, libArtistName: "", libTrackName: "", playCount: playCount};
+        var newItem = {lfmArtistName: artistName, lfmTrackName: trackName, libArtistName: "", libTrackName: "", playCount: playCount, importIt: true, songGuids: []};
         this._nilTreeView.nilPlayCountArray.push(newItem);
       }
     }
@@ -888,9 +886,35 @@ PlayCountImporterDialog.Controller = {
     var notInLibraryTabTitle = this._strings.getString("notInLibraryTabPanelLabel");
     var numNotInLibraryItems = this._nilTreeView.nilPlayCountArray.length;
     if (numNotInLibraryItems > 0) {
-      notInLibraryTabTitle = notInLibraryTabTitle + " (" + numNotInLibraryItems + ")";
+      notInLibraryTabTitle = notInLibraryTabTitle + " (" + numNotInLibraryItems;
+      var numHiddenNotInLibraryItems = this._nilTreeView.hiddenPlayCountArray.length;
+      if (numHiddenNotInLibraryItems > 0) {
+        notInLibraryTabTitle += " + " + numHiddenNotInLibraryItems + " Hidden";
+      }
+      notInLibraryTabTitle += ")";
     }
     this._notInLibraryTabPanel.setAttribute("label", notInLibraryTabTitle);
+  },
+  
+  _showAllNilRows: function() {         
+    this._nilTreeView.nilPlayCountArray = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
+    this._nilTreeView.hiddenPlayCountArray = [];
+    this._updateTreeViews();
+  },
+  
+  _hideFixedlNilRows: function() {
+    this._nilTreeView.hiddenPlayCountArray = [];
+    var index = 0;
+    while (index < this._nilTreeView.nilPlayCountArray.length) {
+      if (this._nilTreeView.nilPlayCountArray[index].libArtistName.length > 0 && this._nilTreeView.nilPlayCountArray[index].libTrackName.length > 0) {
+        this._nilTreeView.hiddenPlayCountArray.splice(this._nilTreeView.hiddenPlayCountArray.length, 0, this._nilTreeView.nilPlayCountArray[index]);
+        this._nilTreeView.nilPlayCountArray.splice(index, 1);
+      }
+      else {
+        index++;
+      }
+    }
+    this._updateTreeViews();
   }
 };
 
