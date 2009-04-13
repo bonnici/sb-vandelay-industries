@@ -885,9 +885,9 @@ PlayCountImporterDialog.Controller = {
     
     var notInLibraryTabTitle = this._strings.getString("notInLibraryTabPanelLabel");
     var numNotInLibraryItems = this._nilTreeView.nilPlayCountArray.length;
-    if (numNotInLibraryItems > 0) {
+    var numHiddenNotInLibraryItems = this._nilTreeView.hiddenPlayCountArray.length;
+    if (numNotInLibraryItems > 0 || numHiddenNotInLibraryItems > 0) {
       notInLibraryTabTitle = notInLibraryTabTitle + " (" + numNotInLibraryItems;
-      var numHiddenNotInLibraryItems = this._nilTreeView.hiddenPlayCountArray.length;
       if (numHiddenNotInLibraryItems > 0) {
         notInLibraryTabTitle += " + " + numHiddenNotInLibraryItems + " Hidden";
       }
