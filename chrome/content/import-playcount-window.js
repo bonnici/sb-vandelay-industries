@@ -275,16 +275,9 @@ PlayCountImporterDialog.Controller = {
       //alert(response.responseText);
       
       this._totalLibraryPages = this._getLibraryTotalPages(response.responseXML);
-
-/*
-      if (this._totalLibraryPages < 1) {
-        alert(this._strings.getString("noLibraryPagesError"));
-        this._endFinding();
-        return;
-      }
-*/
-      //todo check with 2 pages
-      //todo remove noLibraryPagesError
+      
+      // _totalLibraryPages can be 0 or 1 for play counts under 50, but this will work in either case
+      // There is a problem with getting a library with 50-100 tracks, last.fm just says there is 1 page.
       
       this._processLibraryPage(response.responseXML);
       this._curLibraryPage = 2;

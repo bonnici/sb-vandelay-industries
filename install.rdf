@@ -12,6 +12,7 @@
     play counts from last.fm.</em:description>
     
     <em:homepageURL>http://addons.songbirdnest.com/addons/1458</em:homepageURL>
+    <em:iconURL>chrome://vandelay-industries/skin/vandelay-icon.png</em:iconURL>
     
     <em:targetApplication>
       <Description>
