@@ -31,17 +31,17 @@
           <tabpanels flex="1"> 
             <tabpanel id="in-library">
               <hbox flex="1">
-                <tree id="playcount-list" flex="1" hidecolumnpicker="true" seltype="single" editable="true">
+                <tree id="playcount-list" flex="1" hidecolumnpicker="true" seltype="single" editable="true" sortDirection="descending" sortResource="play-count-column">
                   <treecols>
-                    <treecol id="artist-column" label="&vandelay-industries.artist-header.label;" flex="2"/>
+                    <treecol id="artist-column" label="&vandelay-industries.artist-header.label;" flex="2" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
                     <splitter class="tree-splitter" />
-                    <treecol id="title-column" label="&vandelay-industries.title-header.label;" flex="3"/>
+                    <treecol id="title-column" label="&vandelay-industries.title-header.label;" flex="3"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
                     <splitter class="tree-splitter" />
-                    <treecol id="play-count-column" label="&vandelay-industries.playcount-header.label;" width="60"/>
+                    <treecol id="play-count-column" label="&vandelay-industries.playcount-header.label;" width="60"  class="sortDirectionIndicator" sortDirection="descending" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
                     <splitter class="tree-splitter" />
-                    <treecol id="in-library-column" label="&vandelay-industries.inlibrary-header.label;" width="60"/>
+                    <treecol id="in-library-column" label="&vandelay-industries.inlibrary-header.label;" width="60"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
                     <splitter class="tree-splitter" />
-                    <treecol id="import-column" label="&vandelay-industries.importquestion-header.label;" type="checkbox" editable="true" />
+                    <treecol id="import-column" label="&vandelay-industries.importquestion-header.label;" type="checkbox" editable="true"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
                   </treecols>
 
                   <treechildren/>
@@ -52,17 +52,17 @@
             <tabpanel id="not-in-library">
               <vbox flex="1">
                 <hbox flex="1">
-                  <tree id="not-in-library-list" flex="1" hidecolumnpicker="true" seltype="single" onselect="PlayCountImporterDialog.Controller.onNilTreeSelection(event);">
+                  <tree id="not-in-library-list" flex="1" hidecolumnpicker="true" seltype="single" onselect="PlayCountImporterDialog.Controller.onNilTreeSelection(event);" sortDirection="descending" sortResource="nil-play-count-column">
                     <treecols>
-                      <treecol id="nil-lfm-artist-column" label="&vandelay-industries.lfm-artist-header.label;" flex="1"/>
+                      <treecol id="nil-lfm-artist-column" label="&vandelay-industries.lfm-artist-header.label;" flex="1" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortNotInLibList(this)"/>
                       <splitter class="tree-splitter" />
-                      <treecol id="nil-lfm-title-column" label="&vandelay-industries.lfm-title-header.label;" flex="2"/>
+                      <treecol id="nil-lfm-title-column" label="&vandelay-industries.lfm-title-header.label;" flex="2" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortNotInLibList(this)"/>
                       <splitter class="tree-splitter" />
-                      <treecol id="nil-lib-artist-column" label="&vandelay-industries.lib-artist-header.label;" flex="1"/>
+                      <treecol id="nil-lib-artist-column" label="&vandelay-industries.lib-artist-header.label;" flex="1" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortNotInLibList(this)"/>
                       <splitter class="tree-splitter" />
-                      <treecol id="nil-lib-title-column" label="&vandelay-industries.lib-title-header.label;" flex="2"/>
+                      <treecol id="nil-lib-title-column" label="&vandelay-industries.lib-title-header.label;" flex="2" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortNotInLibList(this)"/>
                       <splitter class="tree-splitter" />
-                      <treecol id="play-count-column" label="&vandelay-industries.playcount-header.label;" width="60"/>
+                      <treecol id="nil-play-count-column" label="&vandelay-industries.playcount-header.label;" width="60" class="sortDirectionIndicator" sortDirection="descending" onclick="PlayCountImporterDialog.Controller.sortNotInLibList(this)"/>
                     </treecols>
 
                     <treechildren/>
