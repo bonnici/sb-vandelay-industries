@@ -55,7 +55,7 @@ VandelayIndustries.Controller =
     (
       "chrome://vandelay-industries/content/import-playcount-window.xul", 
       "import-playcount-window", 
-      "chrome,centerscreen,width=520,height=580,resizable=yes"
+      "chrome,centerscreen,width=620,height=580,resizable=yes"
     );
   },
 
