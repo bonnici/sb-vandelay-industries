@@ -81,7 +81,7 @@ PlayCountImporterDialog.Controller = {
           else if (column.id == "nil-lfm-title-column") return this.getLfmTrack(row);
           else if (column.id == "nil-lib-artist-column") return this.getLibArtist(row);
           else if (column.id == "nil-lib-title-column") return this.getLibTrack(row);
-          else if (column.id == "play-count-column") return this.nilPlayCountArray[row].playCount;
+          else if (column.id == "nil-play-count-column") return this.nilPlayCountArray[row].playCount;
           else return "";  
         },  
         setTree: function(treebox) { this.treebox = treebox; },  
@@ -433,7 +433,169 @@ PlayCountImporterDialog.Controller = {
   	  this._endClearing();
     }
   },
+  
+  sortInLibList: function(column) {
+    this.doSort(column, "in-library");
+  },
+  
+  sortNotInLibList: function(column) {
+    this.doSort(column, "not-in-library");
+  },
+  
+  doSort: function(column, tree) {
+    if (tree == "in-library") {
+      var theTree = this._inLibraryTree;
+      var theArray = this._treeView.playCountArray;
+    }
+    else if (tree == "not-in-library") {
+      var theTree = this._notInLibraryTree;
+      var theArray = this._nilTreeView.nilPlayCountArray;
+    }
+    else {
+      return;
+    }
+    
+    var columnName;
+    var order = theTree.getAttribute("sortDirection") == "ascending" ? 1 : -1;
+    //if the column is passed and it's already sorted by that column, reverse sort
+    if (column) {
+    	columnName = column.id;
+    	if (theTree.getAttribute("sortResource") == columnName) {
+    		order *= -1;
+    	}
+    } else {
+    	columnName = tree.getAttribute("sortResource");
+    }
+    
+    theTree.setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+    theTree.setAttribute("sortResource", columnName);
+    //set the appropriate attributes to show to indicator
+    var cols = theTree.getElementsByTagName("treecol");
+    for (var i = 0; i < cols.length; i++) {
+    	cols[i].removeAttribute("sortDirection");
+    }
+    document.getElementById(columnName).setAttribute("sortDirection", order == 1 ? "ascending" : "descending");
+    
+    // Actually sort the data    
+    this.sortOrder = order;
+    switch (columnName)
+    {
+      case "artist-column":
+        theArray.sort(this.sortByArtist);
+        break;
+      case "title-column":
+        theArray.sort(this.sortByTrack);
+        break;
+      case "play-count-column":
+        theArray.sort(this.sortByPlayCount);
+        break;
+      case "in-library-column":
+        theArray.sort(this.sortByInLibrary);
+        break;
+      case "import-column":
+        theArray.sort(this.sortByImport);
+        break;
+      case "nil-lfm-artist-column":
+        theArray.sort(this.sortByLfmArtist);
+        break;
+      case "nil-lfm-title-column":
+        theArray.sort(this.sortByLfmTrack);
+        break;
+      case "nil-lib-artist-column":
+        theArray.sort(this.sortByLibArtist);
+        break;
+      case "nil-lib-title-column":
+        theArray.sort(this.sortByLibTrack);
+        break;
+      case "nil-play-count-column":
+        theArray.sort(this.sortByNilPlayCount);
+        break;
+    }
+    this._updateTreeViews();
+  },
+  
+  sortByArtist: function(a, b) {
+    if (a.artistName.toLowerCase() < b.artistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.artistName.toLowerCase() > b.artistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: track is the second level sort
+    if (a.trackName.toLowerCase() < b.trackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.trackName.toLowerCase() > b.trackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;
+  },
+  
+  sortByTrack: function(a, b) {
+    if (a.trackName.toLowerCase() < b.trackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.trackName.toLowerCase() > b.trackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist is the second level sort
+    if (a.artistName.toLowerCase() < b.artistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.artistName.toLowerCase() > b.artistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;
+  },
 
+  sortByPlayCount: function(a, b) {
+    if (a.playCount < b.playCount) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount > b.playCount) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist/track is the second level sort
+    return PlayCountImporterDialog.Controller.sortByArtist(b, a);
+  },
+  
+  sortByInLibrary: function(a, b) {
+    if (a.songGuids.length < b.songGuids.length) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.songGuids.length > b.songGuids.length) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist/track is the second level sort
+    return PlayCountImporterDialog.Controller.sortByArtist(b, a);
+  },
+  
+  sortByImport: function(a, b) {
+    if (a.importIt < b.importIt) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.importIt > b.importIt) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist/track is the second level sort
+    return PlayCountImporterDialog.Controller.sortByArtist(b, a);
+  },
+  
+  sortByLfmArtist: function(a, b) {
+    if (a.lfmArtistName.toLowerCase() < b.lfmArtistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.lfmArtistName.toLowerCase() > b.lfmArtistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: lfm track is the second level sort
+    if (a.lfmTrackName.toLowerCase() < b.lfmTrackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.lfmTrackName.toLowerCase() > b.lfmTrackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;    
+  },
+  
+  sortByLfmTrack: function(a, b) {
+    if (a.lfmTrackName.toLowerCase() < b.lfmTrackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.lfmTrackName.toLowerCase() > b.lfmTrackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: lfm track is the second level sort
+    if (a.lfmArtistName.toLowerCase() < b.lfmArtistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.lfmArtistName.toLowerCase() > b.lfmArtistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;
+  },
+  
+  sortByLibArtist: function(a, b) {
+    if (a.libArtistName.toLowerCase() < b.libArtistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.libArtistName.toLowerCase() > b.libArtistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: lfm track is the second level sort
+    if (a.libTrackName.toLowerCase() < b.libTrackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.libTrackName.toLowerCase() > b.libTrackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;
+  },
+  
+  sortByLibTrack: function(a, b) {
+    if (a.libTrackName.toLowerCase() < b.libTrackName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.libTrackName.toLowerCase() > b.libTrackName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: lfm track is the second level sort
+    if (a.libArtistName.toLowerCase() < b.libArtistName.toLowerCase()) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.libArtistName.toLowerCase() > b.libArtistName.toLowerCase()) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    return 0;
+  },
+
+  sortByNilPlayCount: function(a, b) {
+    if (a.playCount < b.playCount) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount > b.playCount) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist/track is the second level sort
+    return PlayCountImporterDialog.Controller.sortByLfmArtist(b, a);
+  },
+  
   _updateNilTreeAfterSelection: function() {
     var libArtist = this._nilTreeView.getLibArtist(this._selectedRow);
     this._artistField.value = libArtist != null && libArtist.length > 0 ? libArtist : this._nilTreeView.getLfmArtist(this._selectedRow);
@@ -777,12 +939,14 @@ PlayCountImporterDialog.Controller = {
     }
     this._importPlayCountsButton.setAttribute("disabled", "true");
     this._clearPlayCountsButton.setAttribute("disabled", "true");
+    this._removeButton.setAttribute("disabled", "true");
   },
   
   _enableButtons: function() {
     this._findPlayCountsButton.setAttribute("disabled", "false");
     this._importPlayCountsButton.setAttribute("disabled", "false");
     this._clearPlayCountsButton.setAttribute("disabled", "false");
+    this._removeButton.setAttribute("disabled", "false");
   },
   
   _updateTreeViews: function() {
