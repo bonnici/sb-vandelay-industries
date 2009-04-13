@@ -11,6 +11,8 @@
     <em:description>Dealing mainly in imports and exports. Vandelay Industries lets you import
     play counts from last.fm.</em:description>
     
+    <em:homepageURL>http://addons.songbirdnest.com/addons/1458</em:homepageURL>
+    
     <em:targetApplication>
       <Description>
         <em:id>songbird@songbirdnest.com</em:id>
