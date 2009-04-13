@@ -277,7 +277,7 @@ PlayCountImporterDialog.Controller = {
       this._totalLibraryPages = this._getLibraryTotalPages(response.responseXML);
       
       // _totalLibraryPages can be 0 or 1 for play counts under 50, but this will work in either case
-      // There is a problem with getting a library with 50-100 tracks, last.fm just says there is 1 page.
+      // There is a problem with getting a library with 50-70ish tracks, last.fm just says there is 1 page.
       
       this._processLibraryPage(response.responseXML);
       this._curLibraryPage = 2;
@@ -802,7 +802,16 @@ PlayCountImporterDialog.Controller = {
     
     this._updateTrackSuggestionList(items);
     
-    this._updateSelectedNilTrack();
+    // if the artist was found, go through the rest of the list and update all artists with the same name
+    var lfmArtist = this._nilTreeView.getLfmArtist(this._selectedRow);
+    var libArtist = this._nilTreeView.getLibArtist(this._selectedRow);
+    var newArtist = this._artistField.value;
+    // Paranoid check to make sure the artist name has just been updated
+    if (items != null && items.length > 0 && lfmArtist != null && newArtist != null && lfmArtist.length > 0 && newArtist.length > 0 && lfmArtist != newArtist && libArtist.length == 0) {
+      this._updateAllRowsWithThisArtist(lfmArtist, newArtist);
+    }
+    
+    this._updateSelectedNilTrack();    
   },
   
   _updateTrackSuggestionList: function(artistTracks) {
@@ -844,17 +853,22 @@ PlayCountImporterDialog.Controller = {
       artistList.removeChild(artistList.firstChild);
     }
     
+    var foundArtists = [];
+    
     try {
     	var itemEnum = items.enumerate();
     	while (itemEnum.hasMoreElements()) {
       	var item = itemEnum.getNext();
       	var artist = item.getProperty(SBProperties.artistName);
+      	if (foundArtists[artist] != true) {
+      	  foundArtists[artist] = true;
       	
-      	var artistItem = document.createElement("menuitem");
-        artistItem.setAttribute("label", artist);
-        artistList.appendChild(artistItem);
-  		}
-		}
+          var artistItem = document.createElement("menuitem");
+          artistItem.setAttribute("label", artist);
+          artistList.appendChild(artistItem);
+      	}
+      }
+    }
   	catch (e) {
   	}
   	
@@ -865,6 +879,10 @@ PlayCountImporterDialog.Controller = {
     var guids = this._findSongInLibrary(this._artistField.value, this._trackField.value);
     if (guids.length > 0) {
       this._nilTreeView.setLibInfo(this._selectedRow, this._artistField.value, this._trackField.value, guids);
+      
+      if (this._showFixedCheck.getAttribute("checked") != "true") {
+        this._hideFixedlNilRows();
+      }
     }
   },
   
@@ -896,7 +914,6 @@ PlayCountImporterDialog.Controller = {
   },
   
   _hideFixedlNilRows: function() {
-    this._nilTreeView.hiddenPlayCountArray = [];
     var index = 0;
     while (index < this._nilTreeView.nilPlayCountArray.length) {
       if (this._nilTreeView.nilPlayCountArray[index].libArtistName.length > 0 && this._nilTreeView.nilPlayCountArray[index].libTrackName.length > 0) {
@@ -908,6 +925,20 @@ PlayCountImporterDialog.Controller = {
       }
     }
     this._updateTreeViews();
+    this._updateNilTreeAfterSelection();
+  },
+  
+  _updateAllRowsWithThisArtist: function(oldArtist, newArtist) {
+      for (var index = 0; index < this._nilTreeView.nilPlayCountArray.length; index++) {
+        // If it matches the replaced artist name and we can find a track with the exact name, then fix it
+        if (this._nilTreeView.getLfmArtist(index) == oldArtist && (this._nilTreeView.getLibArtist(index) == null || this._nilTreeView.getLibArtist(index).length == 0)) {
+          var guids = this._findSongInLibrary(newArtist, this._nilTreeView.getLfmTrack(index));
+          if (guids.length > 0) {
+            this._nilTreeView.setLibInfo(index, newArtist, this._nilTreeView.getLfmTrack(index), guids);
+            // _hideFixedlNilRows will be called later
+          }
+        }
+      }
   }
 };
 
