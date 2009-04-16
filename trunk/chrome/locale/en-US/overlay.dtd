@@ -20,3 +20,4 @@
 <!ENTITY vandelay-industries.edit-title.label "Title:">
 <!ENTITY vandelay-industries.remove-button.label "Remove">
 <!ENTITY vandelay-industries.show-fixed-checkbox.label "Show Fixed Tracks">
+<!ENTITY vandelay-industries.auto-fix-button.label "Auto-Fix All">

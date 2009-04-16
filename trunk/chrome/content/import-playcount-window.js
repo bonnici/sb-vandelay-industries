@@ -38,6 +38,8 @@ PlayCountImporterDialog.Controller = {
       this._defaultUsername = lastFMService.username;
     }
     catch (e) {}
+    
+    //this._runTextMatchTests();
                             
     // Set up the tree views
     this._treeView = {  
@@ -160,6 +162,9 @@ PlayCountImporterDialog.Controller = {
     this._removeButton = document.getElementById("remove-button");
     this._removeButton.addEventListener("command", 
           function() { controller.onRemoveNilSelection(); }, false);
+    this._autoFixButton = document.getElementById("auto-fix-button");
+    this._autoFixButton.addEventListener("command", 
+          function() { controller.onAutoFixNilTree(); }, false);
           
     this._selectedRow = -1;
   },
@@ -197,6 +202,14 @@ PlayCountImporterDialog.Controller = {
     this._notInLibraryTree.view = this._nilTreeView;
     this._updateNilTreeAfterSelection();
     this._updateTabPanelTitles();
+  },
+  
+  onAutoFixNilTree: function(event) {
+    answer = confirm(this._strings.getString("autoFixConfirm"));
+
+    if (answer != 0) {
+      this._autoFixNotInLibrary();
+    }
   },
 
   onEditTrackInput: function(event) {
@@ -533,8 +546,8 @@ PlayCountImporterDialog.Controller = {
   },
 
   sortByPlayCount: function(a, b) {
-    if (a.playCount < b.playCount) return 1 * PlayCountImporterDialog.Controller.sortOrder;
-    if (a.playCount > b.playCount) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount * 1 < b.playCount * 1) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount * 1 > b.playCount * 1) return -1 * PlayCountImporterDialog.Controller.sortOrder;
     //tie breaker: artist/track is the second level sort
     return PlayCountImporterDialog.Controller.sortByArtist(b, a);
   },
@@ -590,8 +603,8 @@ PlayCountImporterDialog.Controller = {
   },
 
   sortByNilPlayCount: function(a, b) {
-    if (a.playCount < b.playCount) return 1 * PlayCountImporterDialog.Controller.sortOrder;
-    if (a.playCount > b.playCount) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount * 1 < b.playCount * 1) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.playCount * 1 > b.playCount * 1) return -1 * PlayCountImporterDialog.Controller.sortOrder;
     //tie breaker: artist/track is the second level sort
     return PlayCountImporterDialog.Controller.sortByLfmArtist(b, a);
   },
@@ -939,14 +952,32 @@ PlayCountImporterDialog.Controller = {
     }
     this._importPlayCountsButton.setAttribute("disabled", "true");
     this._clearPlayCountsButton.setAttribute("disabled", "true");
+    
+    //this._artistField.setAttribute("disabled", "true");
+    //this._trackField.setAttribute("disabled", "true");
     this._removeButton.setAttribute("disabled", "true");
+    this._autoFixButton.setAttribute("disabled", "true");
+    this._showFixedCheck.setAttribute("disabled", "true");
+    
+    this._inLibraryTree.setAttribute("disabled", "true");
+    this._notInLibraryTree.setAttribute("disabled", "true");
   },
   
   _enableButtons: function() {
     this._findPlayCountsButton.setAttribute("disabled", "false");
     this._importPlayCountsButton.setAttribute("disabled", "false");
     this._clearPlayCountsButton.setAttribute("disabled", "false");
+    
+    //this._artistField.setAttribute("disabled", "false");
+    //this._trackField.setAttribute("disabled", "false");
+    //this._artistField.setAttribute("editable", "true");
+    //this._trackField.setAttribute("editable", "true");
     this._removeButton.setAttribute("disabled", "false");
+    this._autoFixButton.setAttribute("disabled", "false");
+    this._showFixedCheck.setAttribute("disabled", "false");
+    
+    this._inLibraryTree.setAttribute("disabled", "false");
+    this._notInLibraryTree.setAttribute("disabled", "false");
   },
   
   _updateTreeViews: function() {
@@ -986,21 +1017,36 @@ PlayCountImporterDialog.Controller = {
     }
     
     var foundTracks = [];
+    var weightedTracks = [];
+    var lfmTrackName = this._nilTreeView.getLfmTrack(this._selectedRow);
     
     try {
     	var itemEnum = artistTracks.enumerate();
     	while (itemEnum.hasMoreElements()) {
       	var item = itemEnum.getNext();
       	var track = item.getProperty(SBProperties.trackName);
-      	
-      	foundTracks[track] = 1;
-      	
-      	var trackItem = document.createElement("menuitem");
-        trackItem.setAttribute("label", track);
-        trackList.appendChild(trackItem);
+        
+      	if (foundTracks[track] != true) {
+      	  foundTracks[track] = true;
+      	  
+          var curTrackScore = this._getDifferenceScore(track, lfmTrackName);
+          weightedTracks.push({trackName: track, score: curTrackScore});
+        }
   		}
 		}
   	catch (e) {
+  	}
+  	
+  	function sortByScore(a, b) {
+  	  return a.score < b.score;
+  	}
+  	
+  	weightedTracks.sort(sortByScore);
+  	
+  	for (var index=0; index < weightedTracks.length; index++) {
+  	  var trackItem = document.createElement("menuitem");
+      trackItem.setAttribute("label", weightedTracks[index].trackName);
+      trackList.appendChild(trackItem);
   	}
   },
   
@@ -1009,6 +1055,7 @@ PlayCountImporterDialog.Controller = {
     if (this._trackField.value.length > 0) {
       items = this._findTrackInLibrary(this._trackField.value);
     }
+    
     this._trackCheck.setAttribute("checked", items != null && items.length > 0 ? "true" : "false");
     
     var artistList = document.getElementById("edit-artist-list");
@@ -1018,7 +1065,8 @@ PlayCountImporterDialog.Controller = {
     }
     
     var foundArtists = [];
-    
+    var weightedArtists = [];
+    var lfmArtistName = this._nilTreeView.getLfmArtist(this._selectedRow);
     try {
     	var itemEnum = items.enumerate();
     	while (itemEnum.hasMoreElements()) {
@@ -1027,16 +1075,206 @@ PlayCountImporterDialog.Controller = {
       	if (foundArtists[artist] != true) {
       	  foundArtists[artist] = true;
       	
-          var artistItem = document.createElement("menuitem");
-          artistItem.setAttribute("label", artist);
-          artistList.appendChild(artistItem);
+          // Give each potential artist a score
+          var curArtistScore = this._getDifferenceScore(artist, lfmArtistName);
+          weightedArtists.push({artistName: artist, score: curArtistScore});
       	}
       }
     }
   	catch (e) {
   	}
+
+    function sortByScore(a, b) {
+  	  return a.score < b.score;
+  	}
+
+  	weightedArtists.sort(sortByScore);
+
+  	for (var index=0; index < weightedArtists.length; index++) {
+      var artistItem = document.createElement("menuitem");
+      artistItem.setAttribute("label", weightedArtists[index].artistName);
+      artistList.appendChild(artistItem);
+  	}
   	
     this._updateSelectedNilTrack();
+  },
+  
+  _runTextMatchTests: function() {
+    var resultsString = "Text Match Tests\n";
+    
+    resultsString += this._testTextMatch("exact", "exact", 100);
+    
+    resultsString += this._testTextMatch("CAPS", "caps", 99);
+    resultsString += this._testTextMatch("CApS", "cApS", 99);
+    
+    resultsString += this._testTextMatch("  strip  ", "strip", 98);
+    resultsString += this._testTextMatch("  strip", "strip", 98);
+    resultsString += this._testTextMatch("strip  ", "     strip", 98);
+    resultsString += this._testTextMatch("strip strip", "stripstrip", 98);   
+    resultsString += this._testTextMatch("strIp StriP", "stripstrip", 98); 
+    
+    resultsString += this._testTextMatch("belle & sebastian", " Belle AND Sebastian  ", 97);
+    resultsString += this._testTextMatch("belle and sebastian ", "Belle & Sebastian  ", 97);
+    
+    resultsString += this._testTextMatch("n.e.r.d.", "N*E*R*D", 96);
+    resultsString += this._testTextMatch("Heart's a mess", "Hearts a Mess", 96);
+    resultsString += this._testTextMatch("abcd`~!@#$%^*-=_+\\|;:,./?*(){}[]<>'\"", "a[bcd^]^$@<#$!@(>#'$%)#?\":\\,.+*=/-+", 96);
+    resultsString += this._testTextMatch("!@#$", "@#$", -1);
+    
+    resultsString += this._testTextMatch("Bombtrack", "bombtrack (live)", 95);
+    resultsString += this._testTextMatch("(he'll never be an) ol' man river", "ol man river", 95);
+    resultsString += this._testTextMatch("Bombtrack", "bombtrack [live]", 95);
+    resultsString += this._testTextMatch("Bombtrack", "bombtrack {live}", 95);
+    resultsString += this._testTextMatch("Bombtrack", "bombtrack <live>", 95);
+    
+    resultsString += this._testTextMatch("Damian \"jr. gong\" marley", "Damian Marley", 94);
+    resultsString += this._testTextMatch("Damian 'jr. gong' marley", "Damian Marley", 94);
+    resultsString += this._testTextMatch("Damian 'jr. gong' marley", "Damian Marley!!", 94);
+    
+    resultsString += this._testTextMatch("The Doves", "Doves", 93);
+    resultsString += this._testTextMatch("Doves", "Doves, The", 93);
+    resultsString += this._testTextMatch("Doves", "Doves,The", 93);
+    resultsString += this._testTextMatch("There There", "re There", -3); // Fix this later?
+    resultsString += this._testTextMatch("They writhe", "y wri", -4); // Fix this later?
+    resultsString += this._testTextMatch("Walk The Dog", "Walk Dog", -3);
+    
+    resultsString += this._testTextMatch("03 - song name", "song name", 92);
+    resultsString += this._testTextMatch("song name", "song name which is a remix", 92);
+    
+    resultsString += this._testTextMatch("song", "soong", -1);
+    resultsString += this._testTextMatch("song", "sng", -1);
+    resultsString += this._testTextMatch("song", "snog", -1);
+    resultsString += this._testTextMatch("song", "somg", -1);
+    resultsString += this._testTextMatch("something", "different", -8);
+    resultsString += this._testTextMatch("ab", "different", -9);
+    resultsString += this._testTextMatch("different", "ab", -9);
+    
+    
+    alert(resultsString);
+  },
+  
+  _testTextMatch: function(string1, string2, expectedScore) {
+    var score = this._getDifferenceScore(string1, string2);
+    var match = score == expectedScore;
+    var restultText = match ? "WIN! " : "FAIL! ";
+    restultText += string1 + " & " + string2 + (match ? " == " : " = " + score + " != ") + expectedScore + "\n";
+    return restultText;
+  },
+  
+  // Score is above zero if it matches using some replacements, negative if it takes some corrections
+  _getDifferenceScore: function(from, to) {
+    
+    if (from == to) {
+      return 100;
+    }
+
+    from = from.toLowerCase();
+    to = to.toLowerCase();
+    if (from == to) {
+      return 99;
+    }
+        
+    from = this._stripWhitespace(from);
+    to = this._stripWhitespace(to);
+    if (from == to) {
+      return 98;
+    }
+    
+    from = this._andToAmpersand(from);
+    to = this._andToAmpersand(to);
+    if (from == to) {
+      return 97;
+    }
+    
+    var fromWithoutStuffInBrackets = this._stripStuffInBrackets(from);
+    var toWithoutStuffInBrackets = this._stripStuffInBrackets(to);
+    var fromWithoutStuffInQuotations = this._stripStuffInQuotations(from);
+    var toWithoutStuffInQuotations = this._stripStuffInQuotations(to);
+    
+    var toIsInFrom = from.indexOf(to) >= 0;
+    var fromIsInTo = to.indexOf(from) >= 0;
+    
+    // punctuation
+    var fromOld = from;
+    var toOld = to;
+    from = this._stripPunctuation(from);
+    to = this._stripPunctuation(to);
+
+    var allSpecial = false;
+    if (from.length == 0) {
+      from = fromOld;
+      allSpecial = true;
+    }
+    if (to.length == 0) {
+      to = toOld;
+      allSpecial = true;
+    }
+    
+    if (allSpecial) {
+      return 0 - this._levenshteinDistance(from, to);
+    }
+    
+    if (from == to) {
+      return 96;
+    }
+    
+    // brackets (don't keep)
+    if (this._stripPunctuation(fromWithoutStuffInBrackets) == this._stripPunctuation(toWithoutStuffInBrackets)) {
+      return 95;
+    }
+    
+    // quotations (don't keep)
+    if (this._stripPunctuation(fromWithoutStuffInQuotations) == this._stripPunctuation(toWithoutStuffInQuotations)) {
+      return 94;
+    }
+    
+    // the
+    from = this._stripThes(from);
+    to = this._stripThes(to);
+    if (from == to) {
+      return 93;
+    }
+    
+    // substrings
+    if (toIsInFrom || fromIsInTo) {
+      return 92;
+    }
+    
+    return 0 - this._levenshteinDistance(from, to);
+  },
+  
+  // all assume lower case
+  _andToAmpersand: function(text) {
+    var splitted = text.split("and");
+    var joined = splitted.join("&");
+    return joined;
+  },
+
+  _stripWhitespace: function(text) {
+    // don't care about tabs or other whitespace
+    return text.replace(/ /g, "");
+  },
+
+  _stripPunctuation: function(text) {
+    return text.replace(/[\!\@\#\$\%\^\*\-\=\_\(\)\+\[\]\\\{\}\|\;\'\:\"\,\.\/\<\>\?\`\~]/g, "");
+  },
+  
+  _stripStuffInBrackets: function(text) {
+    text = text.replace(/\(.*\)/g, "");
+    text = text.replace(/\[.*\]/g, "");
+    text = text.replace(/\{.*\}/g, "");
+    return text.replace(/<.*>/g, "");
+  },
+  
+  _stripStuffInQuotations: function(text) {
+    text = text.replace(/".*"/g, "");
+    return text.replace(/'.*'/g, "")
+  },
+  
+  _stripThes: function(text) {
+    text = text.replace(/^the/g, "");
+    text = text.replace(/the$/g, "");
+    return text;
   },
   
   _updateSelectedNilTrack: function() {
@@ -1103,7 +1341,168 @@ PlayCountImporterDialog.Controller = {
           }
         }
       }
+  },
+  
+  _autoFixNotInLibrary: function() {
+    // Go through all the rows that aren't fixed and try to fix the artist or track
+    for (var index = 0; index < this._nilTreeView.nilPlayCountArray.length; index++) {
+      if (index < this._nilTreeView.nilPlayCountArray.length && (this._nilTreeView.nilPlayCountArray[index].songGuids == null || this._nilTreeView.nilPlayCountArray[index].songGuids.length == 0)) {
+        
+        var trackAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmTrackName;
+        var artistAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmArtistName;
+        
+        var tracksMatchingName = this._findTrackInLibrary(trackAtIndex);
+        var artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
+        
+        var bestArtist = "";
+        var bestArtistScore = -1000;
+        
+        try {
+        	var trackEnum = tracksMatchingName.enumerate();
+        	while (trackEnum.hasMoreElements()) {
+          	var trackItem = trackEnum.getNext();
+          	var artist = trackItem.getProperty(SBProperties.artistName);
+            var curArtistScore = this._getDifferenceScore(artist, artistAtIndex);
+          	
+          	if (curArtistScore > bestArtistScore) {
+          	  bestArtist = artist;
+          	  bestArtistScore = curArtistScore;
+          	}
+          }
+        }
+        catch (e) {
+        }
+        
+        var bestTrack = "";
+        var bestTrackScore = -1000;
+        
+        try {
+        	var artistEnum = artistsMatchingName.enumerate();
+        	while (artistEnum.hasMoreElements()) {
+          	var artistItem = artistEnum.getNext();
+          	var track = artistItem.getProperty(SBProperties.trackName);
+            var curTrackScore = this._getDifferenceScore(track, trackAtIndex);
+          	
+          	if (curTrackScore > bestTrackScore) {
+          	  bestTrack = track;
+          	  bestTrackScore = curTrackScore;
+          	}
+          }
+        }
+        catch (e) {
+        }
+        
+        if 
+        (
+          // If there was an artist match and no track match
+          (bestArtistScore > -1000 && bestTrackScore == -1000)
+          || 
+          // Or if there was a decent artist match
+          bestArtistScore > 0
+          || 
+          // Or the artist match was better than the track match
+          (bestArtistScore > -1000 && bestArtistScore > bestTrackScore)
+        ) 
+        {
+          // Make sure the match was actually something
+          if 
+          (
+              bestArtistScore > 0 
+              || 
+              ( (bestArtistScore*-1 < bestArtist.length/2) && (bestArtistScore*-1 < artistAtIndex.length/2) )
+          ) 
+          {
+            this._updateAllRowsWithThisArtist(artistAtIndex, bestArtist);
+          }
+        }
+        else if (bestTrackScore > -1000) 
+        {
+          if 
+          (
+              bestTrackScore > 0 
+              || 
+              ( (bestTrackScore*-1 < bestTrack.length/2) && (bestTrackScore*-1 < trackAtIndex.length/2) )
+          ) 
+          {
+            var guids = this._findSongInLibrary(artistAtIndex, bestTrack);
+            if (guids.length > 0) 
+            {
+              this._nilTreeView.setLibInfo(index, artistAtIndex, bestTrack, guids);
+            }
+          }
+        }
+      }
+    }
+    
+    if (this._showFixedCheck.getAttribute("checked") != "true") {
+      this._hideFixedlNilRows();
+    }
+  },
+  
+  // From http://snippets.dzone.com/posts/show/6942
+  //based on: http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance
+  //and:  http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+  _levenshteinDistance: function(a, b)
+  {
+  	var i;
+  	var j;
+  	var cost;
+  	var d = new Array();
+
+  	if ( a.length == 0 )
+  	{
+  		return b.length;
+  	}
+
+  	if ( b.length == 0 )
+  	{
+  		return a.length;
+  	}
+
+  	for ( i = 0; i <= a.length; i++ )
+  	{
+  		d[ i ] = new Array();
+  		d[ i ][ 0 ] = i;
+  	}
+
+  	for ( j = 0; j <= b.length; j++ )
+  	{
+  		d[ 0 ][ j ] = j;
+  	}
+
+  	for ( i = 1; i <= a.length; i++ )
+  	{
+  		for ( j = 1; j <= b.length; j++ )
+  		{
+  			if ( a.charAt( i - 1 ) == b.charAt( j - 1 ) )
+  			{
+  				cost = 0;
+  			}
+  			else
+  			{
+  				cost = 1;
+  			}
+
+  			d[ i ][ j ] = Math.min( d[ i - 1 ][ j ] + 1, d[ i ][ j - 1 ] + 1, d[ i - 1 ][ j - 1 ] + cost );
+
+  			if(
+           i > 1 && 
+           j > 1 &&  
+           a.charAt(i - 1) == b.charAt(j-2) && 
+           a.charAt(i-2) == b.charAt(j-1)
+           ){
+            d[i][j] = Math.min(
+              d[i][j],
+              d[i - 2][j - 2] + cost
+            )
+
+  			}
+  		}
+  	}
+
+  	return d[ a.length ][ b.length ];
   }
+  
 };
 
 window.addEventListener("load", function(e) { PlayCountImporterDialog.Controller.onLoad(e); }, false);

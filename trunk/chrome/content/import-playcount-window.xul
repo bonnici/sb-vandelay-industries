@@ -98,6 +98,7 @@
                   <vbox>
                     <checkbox id="show-fixed-checkbox" label="&vandelay-industries.show-fixed-checkbox.label;" checked="true" oncommand="PlayCountImporterDialog.Controller.onShowFixedCheckCommand(event);" />
                     <button id="remove-button" label="&vandelay-industries.remove-button.label;" />
+                    <button id="auto-fix-button" label="&vandelay-industries.auto-fix-button.label;" />
                   </vbox>
                 </hbox>
               </vbox>
