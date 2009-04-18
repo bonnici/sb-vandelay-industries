@@ -1,0 +1,23 @@
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Import Last.fm Play Counts">
+<!ENTITY vandelay-industries.find-playcount-group.label "Find Play Counts">
+<!ENTITY vandelay-industries.lastfm-username.label "Last.fm username:">
+<!ENTITY vandelay-industries.resume-search.label "Resume">
+<!ENTITY vandelay-industries.artist-header.label "Artist">
+<!ENTITY vandelay-industries.title-header.label "Title">
+<!ENTITY vandelay-industries.playcount-header.label "Play Count">
+<!ENTITY vandelay-industries.inlibrary-header.label "In Library">
+<!ENTITY vandelay-industries.importquestion-header.label "Import?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Import Play Counts">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Only overwrite play count if it is more than the current play count">
+<!ENTITY vandelay-industries.update-first-match.label "Only update the play count of the first matching song in the library">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Reset Play Counts">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Warning: This will erase the play count of every song in your library">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Last.fm Artist">
+<!ENTITY vandelay-industries.lfm-title-header.label "Last.fm Title">
+<!ENTITY vandelay-industries.lib-artist-header.label "Library Artist">
+<!ENTITY vandelay-industries.lib-title-header.label "Library Title">
+<!ENTITY vandelay-industries.edit-artist.label "Artist:">
+<!ENTITY vandelay-industries.edit-title.label "Title:">
+<!ENTITY vandelay-industries.remove-button.label "Remove">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Show Fixed Tracks">
+<!ENTITY vandelay-industries.auto-fix-button.label "Auto-Fix All">
