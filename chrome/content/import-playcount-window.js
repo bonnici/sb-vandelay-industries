@@ -290,6 +290,7 @@ PlayCountImporterDialog.Controller = {
     var globallyFixArtists = this._globallyFixArtistCheck.getAttribute("checked") == "true";
       
     var combinedArrays = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
+    var numSongsUpdated = 0;
     
     for (var index = 0; index < combinedArrays.length; index++) {
       if (combinedArrays[index].songGuids != null && combinedArrays[index].songGuids.length > 0) {
@@ -298,9 +299,10 @@ PlayCountImporterDialog.Controller = {
           var mediaItem = LibraryUtils.mainLibrary.getItemByGuid(combinedArrays[index].songGuids[songIndex]);
           mediaItem.setProperty(SBProperties.trackName, combinedArrays[index].lfmTrackName);
           mediaItem.setProperty(SBProperties.artistName, combinedArrays[index].lfmArtistName);
+          numSongsUpdated++;
         }
         
-        if (globallyFixArtists) {
+        if (globallyFixArtists && combinedArrays[index].lfmArtistName != combinedArrays[index].libArtistName) {
           var tracksFromArtist = this._findArtistInLibrary(combinedArrays[index].libArtistName);
           
           if (tracksFromArtist != null) {
@@ -309,6 +311,7 @@ PlayCountImporterDialog.Controller = {
             	while (trackEnum.hasMoreElements()) {
               	var item = trackEnum.getNext();
               	item.setProperty(SBProperties.artistName, combinedArrays[index].lfmArtistName);
+              	numSongsUpdated++;
               }
             }
             catch (e) {
@@ -317,6 +320,13 @@ PlayCountImporterDialog.Controller = {
           }
         }
       }
+    }
+    
+    if (numSongsUpdated == 0) {
+      alert(this._strings.getString("fixMetadataErrorNoSongs"));
+    }
+    else {
+      alert(this._strings.getFormattedString("fixMetadataSuccess", [numSongsUpdated]));
     }
   },
   
