@@ -4,7 +4,7 @@
 
 <window
     id="import-playcount-window"
-    title="Import Play Counts"
+    title="&vandelay-industries.window-title;"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     
     <script src="import-playcount-window.js" />
@@ -109,28 +109,78 @@
         
       </groupbox>
       
-      <groupbox>
-        <caption label="&vandelay-industries.import-playcount-group.label;" />
-        <checkbox id="overwrite-if-greater-checkbox" label="&vandelay-industries.overwrite-if-greater.label;" checked="true"/>
-        <checkbox id="update-first-match-checkbox" label="&vandelay-industries.update-first-match.label;" checked="false"/>
-        <hbox>
-          <button id="import-playcount-button" width="100" />
-        </hbox>
-      </groupbox>
-      
-      <groupbox>
-        <caption label="&vandelay-industries.reset-playcount-group.label;" />
-        <description>
-          &vandelay-industries.reset-playcount-warning.label;
-        </description>
-        <hbox>
-          <button id="clear-playcounts-button" width="100" />
-        </hbox>
-      </groupbox>
+      <tabbox class="bottombox"> 
+        <tabs> 
+          <tab label="&vandelay-industries.import-playcount-tab.label;" /> 
+          <tab label="&vandelay-industries.fix-metadata-tab.label;" />
+          <tab label="&vandelay-industries.clear-playcount-tab.label;" />
+        </tabs> 
+        <tabpanels> 
+        
+          <tabpanel>
+            <hbox flex="1">
+              <spacer height="10" width="10" />
+              <vbox flex="1">
+                <spacer height="10" width="10" />
+                <checkbox id="overwrite-if-greater-checkbox" label="&vandelay-industries.overwrite-if-greater.label;" checked="true"/>
+                <checkbox id="add-to-existing-playcount-checkbox" label="&vandelay-industries.add-to-existing.label;" checked="false"/>
+                <checkbox id="update-first-match-checkbox" label="&vandelay-industries.update-first-match.label;" checked="false"/>
+                <spacer height="10" width="10" />
+              </vbox>
+              <vbox>
+                <spacer flex="1" />
+                <button id="import-playcount-button" width="100" />
+                <spacer height="10" width="10" />
+              </vbox>
+              <spacer height="10" width="10" />
+            </hbox>  
+          </tabpanel>
+
+          <tabpanel>
+            <hbox flex="1">
+              <spacer height="10" width="10" />
+              <vbox flex="1">
+                <spacer height="10" width="10" />
+                <checkbox id="globally-fix-artist-checkbox" label="&vandelay-industries.globally-fix-artist-checkbox.label;" checked="false" />
+                <description>
+                  &vandelay-industries.globally-fix-artist-desc.label;
+                </description>
+                <spacer height="10" width="10" />
+              </vbox>
+              <vbox>
+                <spacer flex="1" />
+                <button id="fix-metadata-button" width="100" label="&vandelay-industries.fix-tags-button.label;" />
+                <spacer height="10" width="10" />
+              </vbox>
+              <spacer height="10" width="10" />
+            </hbox>          
+          </tabpanel>
+            
+          <tabpanel>
+            <hbox flex="1">
+              <spacer height="10" width="10" />
+              <vbox flex="1">
+                <spacer height="10" width="10" />
+                <description>
+                  &vandelay-industries.reset-playcount-warning.label;
+                </description>
+                <spacer height="10" width="10" />
+              </vbox>
+              <vbox>
+                <spacer flex="1" />
+                <button id="clear-playcounts-button" width="100" />
+                <spacer height="10" width="10" />
+              </vbox>
+              <spacer height="10" width="10" />
+            </hbox>
+          </tabpanel>
+          
+        </tabpanels>
+      </tabbox>
     </vbox>
       
     <statusbar>
-      <statusbarpanel id = "status-label" width="200" />
+      <statusbarpanel id="status-label" width="230" />
       <progressmeter id="progress-meter" mode="determined" flex="1"/>
       <spacer width="15" /> <!-- Space for the resize thingy -->
     </statusbar>

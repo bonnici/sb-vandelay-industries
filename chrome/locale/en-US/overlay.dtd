@@ -1,5 +1,6 @@
-<!ENTITY vandelay-industries.importplaycount-menuitem.label "Import Last.fm Play Counts">
-<!ENTITY vandelay-industries.find-playcount-group.label "Find Play Counts">
+<!ENTITY vandelay-industries.window-title "Import Last.fm Play Counts and Metadata">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Import Last.fm Play Counts and Metadata">
+<!ENTITY vandelay-industries.find-playcount-group.label "Get Library Data">
 <!ENTITY vandelay-industries.lastfm-username.label "Last.fm username:">
 <!ENTITY vandelay-industries.resume-search.label "Resume">
 <!ENTITY vandelay-industries.artist-header.label "Artist">
@@ -7,7 +8,7 @@
 <!ENTITY vandelay-industries.playcount-header.label "Play Count">
 <!ENTITY vandelay-industries.inlibrary-header.label "In Library">
 <!ENTITY vandelay-industries.importquestion-header.label "Import?">
-<!ENTITY vandelay-industries.import-playcount-group.label "Import Play Counts">
+<!ENTITY vandelay-industries.import-playcount-group.label "Get Last.fm Library Data">
 <!ENTITY vandelay-industries.overwrite-if-greater.label "Only overwrite play count if it is more than the current play count">
 <!ENTITY vandelay-industries.update-first-match.label "Only update the play count of the first matching song in the library">
 <!ENTITY vandelay-industries.reset-playcount-group.label "Reset Play Counts">
@@ -21,3 +22,10 @@
 <!ENTITY vandelay-industries.remove-button.label "Remove">
 <!ENTITY vandelay-industries.show-fixed-checkbox.label "Show Fixed Tracks">
 <!ENTITY vandelay-industries.auto-fix-button.label "Auto-Fix All">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Import Play Counts">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Clear Play Counts">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Fix Metadata">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Globally fix artists">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "If this option is checked, every time a track is fixed, the artist tag of all tracks with the mistagged artist will be corrected, even if that particular track does not appear in the list. ">
+<!ENTITY vandelay-industries.fix-tags-button.label "Fix Tags">
+<!ENTITY vandelay-industries.add-to-existing.label "Add counts to existing play counts instead of overwriting them">
