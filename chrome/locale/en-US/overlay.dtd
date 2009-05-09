@@ -29,3 +29,5 @@
 <!ENTITY vandelay-industries.globally-fix-artist-desc.label "If this option is checked, every time a track is fixed, the artist tag of all tracks with the mistagged artist will be corrected, even if that particular track does not appear in the list. ">
 <!ENTITY vandelay-industries.fix-tags-button.label "Fix Tags">
 <!ENTITY vandelay-industries.add-to-existing.label "Add counts to existing play counts instead of overwriting them">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Note: Only the songs in the 'Not Found In Library' tab which have the 'Import?' column checked will be updated.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "Auto-Fix Selected">

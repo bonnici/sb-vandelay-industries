@@ -123,10 +123,10 @@ PlayCountImporterDialog.Controller = {
         },        
         getColumnProperties: function(colid,col,props) {}, 
         update: function() { this.rowCount = this.nilPlayCountArray.length; }, 
-        getLfmArtist: function(row) { return row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].lfmArtistName : null; },
-        getLfmTrack: function(row) { return row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].lfmTrackName : null; },
-        getLibArtist: function(row) { return row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].libArtistName : null; },
-        getLibTrack: function(row) { return row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].libTrackName : null; },
+        getLfmArtist: function(row) { return row >= 0 && row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].lfmArtistName : null; },
+        getLfmTrack: function(row) { return row >= 0 && row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].lfmTrackName : null; },
+        getLibArtist: function(row) { return row >= 0 && row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].libArtistName : null; },
+        getLibTrack: function(row) { return row >= 0 && row < this.nilPlayCountArray.length ? this.nilPlayCountArray[row].libTrackName : null; },
         setLibInfo: function(row, artist, track, guids) { 
           this.nilPlayCountArray[row].libArtistName = artist;
           this.nilPlayCountArray[row].libTrackName = track;
@@ -139,7 +139,10 @@ PlayCountImporterDialog.Controller = {
             this.update();
             this.treebox.invalidate();
           }
-        }
+        },
+        isEditable: function(row,col) { return true; },
+        getCellValue: function(row,col) { return this.nilPlayCountArray[row].importIt ? "true" : "false"; },
+        setCellValue: function(row,col,string) { this.nilPlayCountArray[row].importIt = (string == "true" ? true : false); this.treebox.invalidateRow(row); }
     };
     
     // Set the default username
@@ -193,12 +196,20 @@ PlayCountImporterDialog.Controller = {
     this._trackField = document.getElementById("edit-track-textbox");
     this._trackCheck = document.getElementById("edit-track-checkbox");
     this._showFixedCheck = document.getElementById("show-fixed-checkbox");
+    
+    // Disabled since I can't stop the tree from scrolling to the top after a remove
+    /*
     this._removeButton = document.getElementById("remove-button");
     this._removeButton.addEventListener("command", 
           function() { controller.onRemoveNilSelection(); }, false);
+    */
+          
     this._autoFixButton = document.getElementById("auto-fix-button");
     this._autoFixButton.addEventListener("command", 
           function() { controller.onAutoFixNilTree(); }, false);
+    this._autoFixSelectedButton = document.getElementById("auto-fix-single-button");
+    this._autoFixSelectedButton.addEventListener("command", 
+          function() { controller.onAutoFixSelected(); }, false);
       
     this._globallyFixArtistCheck = document.getElementById("globally-fix-artist-checkbox");
     this._fixMetadataButton = document.getElementById("fix-metadata-button");
@@ -212,7 +223,7 @@ PlayCountImporterDialog.Controller = {
   fakePopulate: function() {
     this._treeView.playCountArray.push({artistName: "artistName", trackName: "trackName", playCount: 1, songGuids: ["a", "b"], importIt: true});
     this._treeView.playCountArray.push({artistName: "artistName2", trackName: "trackName", playCount: 2, songGuids: ["a"], importIt: false});
-    this._nilTreeView.nilPlayCountArray.push({lfmArtistName: "artistName3", lfmTrackName: "trackName", libArtistName: "", libTrackName: "", playCount: 3});
+    this._nilTreeView.nilPlayCountArray.push({lfmArtistName: "artistName3", lfmTrackName: "trackName", libArtistName: "", libTrackName: "", playCount: 3, importIt: true});
     this._updateTreeViews();
   },
 
@@ -252,7 +263,9 @@ PlayCountImporterDialog.Controller = {
   },
   
   onRemoveNilSelection: function(event) {
-    this._nilTreeView.removeItem(this._notInLibraryTree.currentIndex);
+    var selectedIndex = this._notInLibraryTree.currentIndex;
+    this._nilTreeView.removeItem(selectedIndex);
+    this._nilTreeView.selection.select(selectedIndex);
     this._notInLibraryTree.view = this._nilTreeView;
     this._updateNilTreeAfterSelection();
     this._updateTabPanelTitles();
@@ -264,6 +277,13 @@ PlayCountImporterDialog.Controller = {
     if (answer != 0) {
       this._autoFixNotInLibrary();
     }
+  },
+  
+  onAutoFixSelected: function(event) {
+    var selectedIndex = this._notInLibraryTree.currentIndex;
+    this._autoFixRow(selectedIndex);
+    selectedIndex++;
+    this._nilTreeView.selection.select(selectedIndex);
   },
 
   onEditTrackInput: function(event) {
@@ -286,47 +306,50 @@ PlayCountImporterDialog.Controller = {
     if (answer == 0) {
       return;
     }
-      
-    var globallyFixArtists = this._globallyFixArtistCheck.getAttribute("checked") == "true";
-      
-    var combinedArrays = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
-    var numSongsUpdated = 0;
+
+    this._startFixMetadata();
+  },
+  
+  doFixMetadata: function() {
     
-    for (var index = 0; index < combinedArrays.length; index++) {
-      if (combinedArrays[index].songGuids != null && combinedArrays[index].songGuids.length > 0) {
-        
-        for (var songIndex = 0; songIndex < combinedArrays[index].songGuids.length; songIndex++) {
-          var mediaItem = LibraryUtils.mainLibrary.getItemByGuid(combinedArrays[index].songGuids[songIndex]);
-          mediaItem.setProperty(SBProperties.trackName, combinedArrays[index].lfmTrackName);
-          mediaItem.setProperty(SBProperties.artistName, combinedArrays[index].lfmArtistName);
-          numSongsUpdated++;
+    if (this._fixMetadataCall < 0 || this._fixMetadataCall >= this._combinedFixMetadataArrays.length) {
+  	  this._endFixMetadata();
+    }
+    else {
+      this._setStatus(this._strings.getFormattedString("fixMetadataStatus", [this._fixMetadataCall+1, this._combinedFixMetadataArrays.length]), ((this._fixMetadataCall+1) / this._combinedFixMetadataArrays.length) * 100);
+      
+      var curItem = this._combinedFixMetadataArrays[this._fixMetadataCall];
+      
+      if (curItem.importIt == true && curItem.songGuids != null && curItem.songGuids.length > 0) 
+      {
+        for (var songIndex = 0; songIndex < curItem.songGuids.length; songIndex++) {
+          var mediaItem = LibraryUtils.mainLibrary.getItemByGuid(curItem.songGuids[songIndex]);
+          mediaItem.setProperty(SBProperties.trackName, curItem.lfmTrackName);
+          mediaItem.setProperty(SBProperties.artistName, curItem.lfmArtistName);
+          this._numSongsUpdated++;
         }
-        
-        if (globallyFixArtists && combinedArrays[index].lfmArtistName != combinedArrays[index].libArtistName) {
-          var tracksFromArtist = this._findArtistInLibrary(combinedArrays[index].libArtistName);
-          
+
+        if (this._globallyFixArtists && curItem.lfmArtistName != curItem.libArtistName) {
+          var tracksFromArtist = this._findArtistInLibrary(curItem.libArtistName);
+
           if (tracksFromArtist != null) {
             try {
             	var trackEnum = tracksFromArtist.enumerate();
             	while (trackEnum.hasMoreElements()) {
               	var item = trackEnum.getNext();
               	item.setProperty(SBProperties.artistName, combinedArrays[index].lfmArtistName);
-              	numSongsUpdated++;
+              	this._numSongsUpdated++;
               }
             }
             catch (e) {
             }
-                        
+
           }
         }
       }
-    }
-    
-    if (numSongsUpdated == 0) {
-      alert(this._strings.getString("fixMetadataErrorNoSongs"));
-    }
-    else {
-      alert(this._strings.getFormattedString("fixMetadataSuccess", [numSongsUpdated]));
+        
+      this._fixMetadataCall++;
+      setTimeout("PlayCountImporterDialog.Controller.doFixMetadata()", 0);
     }
   },
   
@@ -627,6 +650,9 @@ PlayCountImporterDialog.Controller = {
       case "nil-play-count-column":
         theArray.sort(this.sortByNilPlayCount);
         break;
+      case "nil-import-column":
+        theArray.sort(this.sortByNilImport);
+        break;
     }
     
     if (tree == "in-library") {
@@ -635,6 +661,8 @@ PlayCountImporterDialog.Controller = {
     else if (tree == "not-in-library") {
       this._notInLibraryTree.view = this._nilTreeView;
     }
+    
+    this._updateNilTreeAfterSelection();
   },
   
   sortByArtist: function(a, b) {
@@ -715,6 +743,13 @@ PlayCountImporterDialog.Controller = {
   sortByNilPlayCount: function(a, b) {
     if (a.playCount * 1 > b.playCount * 1) return 1 * PlayCountImporterDialog.Controller.sortOrder;
     if (a.playCount * 1 < b.playCount * 1) return -1 * PlayCountImporterDialog.Controller.sortOrder;
+    //tie breaker: artist/track is the second level sort
+    return PlayCountImporterDialog.Controller.sortByLfmArtist(b, a);
+  },
+
+  sortByNilImport: function(a, b) {
+    if (a.importIt < b.importIt) return 1 * PlayCountImporterDialog.Controller.sortOrder;
+    if (a.importIt > b.importIt) return -1 * PlayCountImporterDialog.Controller.sortOrder;
     //tie breaker: artist/track is the second level sort
     return PlayCountImporterDialog.Controller.sortByLfmArtist(b, a);
   },
@@ -1079,8 +1114,9 @@ PlayCountImporterDialog.Controller = {
     
     //this._artistField.setAttribute("disabled", "true");
     //this._trackField.setAttribute("disabled", "true");
-    this._removeButton.setAttribute("disabled", "true");
+    //this._removeButton.setAttribute("disabled", "true");
     this._autoFixButton.setAttribute("disabled", "true");
+    this._autoFixSelectedButton.setAttribute("disabled", "true");
     this._showFixedCheck.setAttribute("disabled", "true");
     
     this._inLibraryTree.setAttribute("disabled", "true");
@@ -1097,8 +1133,9 @@ PlayCountImporterDialog.Controller = {
     //this._trackField.setAttribute("disabled", "false");
     //this._artistField.setAttribute("editable", "true");
     //this._trackField.setAttribute("editable", "true");
-    this._removeButton.setAttribute("disabled", "false");
+    //this._removeButton.setAttribute("disabled", "false");
     this._autoFixButton.setAttribute("disabled", "false");
+    this._autoFixSelectedButton.setAttribute("disabled", "false");
     this._showFixedCheck.setAttribute("disabled", "false");
     
     this._inLibraryTree.setAttribute("disabled", "false");
@@ -1483,118 +1520,148 @@ PlayCountImporterDialog.Controller = {
     // Go through all the rows that aren't fixed and try to fix the artist or track
     for (var index = 0; index < this._nilTreeView.nilPlayCountArray.length; index++) {
       if (index < this._nilTreeView.nilPlayCountArray.length && (this._nilTreeView.nilPlayCountArray[index].songGuids == null || this._nilTreeView.nilPlayCountArray[index].songGuids.length == 0)) {
-        
-        var trackAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmTrackName;
-        var artistAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmArtistName;
-        
-        // Quick check to see if we have already fixed this artist
-        if (this._fixedArtists[artistAtIndex] != null) {
-            var guids = this._findSongInLibrary(this._fixedArtists[artistAtIndex], trackAtIndex);
-            if (guids.length > 0) {
-              this._nilTreeView.setLibInfo(index, this._fixedArtists[artistAtIndex], trackAtIndex, guids);
-              continue;
-            }
-        }
-        
-        var tracksMatchingName = this._findTrackInLibrary(trackAtIndex);
-        var artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
-        
-        // If we can't find an artist or track, try with a previously fixed artist
-        if (tracksMatchingName == null && artistsMatchingName == null && this._fixedArtists[artistAtIndex] != null) {
-          artistAtIndex = this._fixedArtists[artistAtIndex];
-          artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
-        }
-        
-        var bestArtist = "";
-        var bestArtistScore = -1000;
-        
-        try {
-        	var trackEnum = tracksMatchingName.enumerate();
-        	while (trackEnum.hasMoreElements()) {
-          	var trackItem = trackEnum.getNext();
-          	var artist = trackItem.getProperty(SBProperties.artistName);
-            var curArtistScore = this._getDifferenceScore(artist, artistAtIndex);
-          	
-          	if (curArtistScore > bestArtistScore) {
-          	  bestArtist = artist;
-          	  bestArtistScore = curArtistScore;
-          	}
-          }
-        }
-        catch (e) {
-        }
-        
-        var bestTrack = "";
-        var bestTrackScore = -1000;
-        
-        try {
-        	var artistEnum = artistsMatchingName.enumerate();
-        	while (artistEnum.hasMoreElements()) {
-          	var artistItem = artistEnum.getNext();
-          	var track = artistItem.getProperty(SBProperties.trackName);
-            var curTrackScore = this._getDifferenceScore(track, trackAtIndex);
-          	
-          	if (curTrackScore > bestTrackScore) {
-          	  bestTrack = track;
-          	  bestTrackScore = curTrackScore;
-          	}
-          }
-        }
-        catch (e) {
-        }
-        
-        if 
-        (
-          // If there was an artist match and no track match
-          (bestArtistScore > -1000 && bestTrackScore == -1000)
-          || 
-          // Or if there was a decent artist match
-          bestArtistScore > 0
-          || 
-          // Or the artist match was better than the track match
-          (bestArtistScore > -1000 && bestArtistScore > bestTrackScore)
-        ) 
-        {
-          // Make sure the match was actually something
-          if 
-          (
-              bestArtistScore > 0 
-              || 
-              // put an upper limit of 5 changes
-              (bestArtistScore >= -5 && ((bestArtistScore*-1 < bestArtist.length/2) && (bestArtistScore*-1 < artistAtIndex.length/2)))
-          ) 
-          {
-            var guids = this._findSongInLibrary(bestArtist, trackAtIndex);
-            if (guids.length > 0) 
-            {
-              this._nilTreeView.setLibInfo(index, bestArtist, trackAtIndex, guids);
-              this._fixedArtists[artistAtIndex] = bestArtist;
-            }
-          }
-        }
-        else if (bestTrackScore > -1000) 
-        {
-          if 
-          (
-              bestTrackScore > 0 
-              || 
-              // put an upper limit of 5 changes
-              (bestTrackScore >= -5 && ((bestTrackScore*-1 < bestTrack.length/2) && (bestTrackScore*-1 < trackAtIndex.length/2)))
-          ) 
-          {
-            var guids = this._findSongInLibrary(artistAtIndex, bestTrack);
-            if (guids.length > 0) 
-            {
-              this._nilTreeView.setLibInfo(index, artistAtIndex, bestTrack, guids);
-            }
-          }
-        }
+        this._autoFixRow(index);
       }
     }
     
     if (this._showFixedCheck.getAttribute("checked") != "true") {
       this._hideFixedlNilRows();
     }
+  },
+  
+  _autoFixRow: function(index) {
+    var trackAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmTrackName;
+    var artistAtIndex = this._nilTreeView.nilPlayCountArray[index].lfmArtistName;
+    
+    // Quick check to see if we have already fixed this artist
+    if (this._fixedArtists[artistAtIndex] != null) {
+        var guids = this._findSongInLibrary(this._fixedArtists[artistAtIndex], trackAtIndex);
+        if (guids.length > 0) {
+          this._nilTreeView.setLibInfo(index, this._fixedArtists[artistAtIndex], trackAtIndex, guids);
+          return;
+        }
+    }
+    
+    var tracksMatchingName = this._findTrackInLibrary(trackAtIndex);
+    var artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
+    
+    // If we can't find an artist or track, try with a previously fixed artist
+    if (tracksMatchingName == null && artistsMatchingName == null && this._fixedArtists[artistAtIndex] != null) {
+      artistAtIndex = this._fixedArtists[artistAtIndex];
+      artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
+    }
+    
+    var bestArtist = "";
+    var bestArtistScore = -1000;
+    
+    try {
+    	var trackEnum = tracksMatchingName.enumerate();
+    	while (trackEnum.hasMoreElements()) {
+      	var trackItem = trackEnum.getNext();
+      	var artist = trackItem.getProperty(SBProperties.artistName);
+        var curArtistScore = this._getDifferenceScore(artist, artistAtIndex);
+      	
+      	if (curArtistScore > bestArtistScore) {
+      	  bestArtist = artist;
+      	  bestArtistScore = curArtistScore;
+      	}
+      }
+    }
+    catch (e) {
+    }
+    
+    var bestTrack = "";
+    var bestTrackScore = -1000;
+    
+    try {
+    	var artistEnum = artistsMatchingName.enumerate();
+    	while (artistEnum.hasMoreElements()) {
+      	var artistItem = artistEnum.getNext();
+      	var track = artistItem.getProperty(SBProperties.trackName);
+        var curTrackScore = this._getDifferenceScore(track, trackAtIndex);
+      	
+      	if (curTrackScore > bestTrackScore) {
+      	  bestTrack = track;
+      	  bestTrackScore = curTrackScore;
+      	}
+      }
+    }
+    catch (e) {
+    }
+    
+    if 
+    (
+      // If there was an artist match and no track match
+      (bestArtistScore > -1000 && bestTrackScore == -1000)
+      || 
+      // Or if there was a decent artist match
+      bestArtistScore > 0
+      || 
+      // Or the artist match was better than the track match
+      (bestArtistScore > -1000 && bestArtistScore > bestTrackScore)
+    ) 
+    {
+      // Make sure the match was actually something
+      if 
+      (
+          bestArtistScore > 0 
+          || 
+          // put an upper limit of 5 changes
+          (bestArtistScore >= -5 && ((bestArtistScore*-1 < bestArtist.length/2) && (bestArtistScore*-1 < artistAtIndex.length/2)))
+      ) 
+      {
+        var guids = this._findSongInLibrary(bestArtist, trackAtIndex);
+        if (guids.length > 0) 
+        {
+          this._nilTreeView.setLibInfo(index, bestArtist, trackAtIndex, guids);
+          this._fixedArtists[artistAtIndex] = bestArtist;
+        }
+      }
+    }
+    else if (bestTrackScore > -1000) 
+    {
+      if 
+      (
+          bestTrackScore > 0 
+          || 
+          // put an upper limit of 5 changes
+          (bestTrackScore >= -5 && ((bestTrackScore*-1 < bestTrack.length/2) && (bestTrackScore*-1 < trackAtIndex.length/2)))
+      ) 
+      {
+        var guids = this._findSongInLibrary(artistAtIndex, bestTrack);
+        if (guids.length > 0) 
+        {
+          this._nilTreeView.setLibInfo(index, artistAtIndex, bestTrack, guids);
+        }
+      }
+    }
+  },
+  
+  _startFixMetadata: function() {
+    
+    this._globallyFixArtists = this._globallyFixArtistCheck.getAttribute("checked") == "true";
+    
+    this._combinedFixMetadataArrays = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
+    this._numSongsUpdated = 0;
+    this._fixMetadataCall = 0;
+    
+    this._disableButtons(true);
+    
+    this._setStatus(this._strings.getString("fixingMetadataProgressStatus"), -1);
+    
+    setTimeout("PlayCountImporterDialog.Controller.doFixMetadata()", 1);
+  },
+  
+  _endFixMetadata: function() {
+    if (this._numSongsUpdated == 0) {
+      alert(this._strings.getString("fixMetadataErrorNoSongs"));
+    }
+    else {
+      alert(this._strings.getFormattedString("fixMetadataSuccess", [this._numSongsUpdated]));
+    }
+    
+    this._enableButtons(true);
+    this._clearStatus();
   },
   
   // From http://snippets.dzone.com/posts/show/6942
