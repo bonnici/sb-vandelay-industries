@@ -10,6 +10,8 @@ if (typeof(Cr) == 'undefined')
 Cu.import("resource://app/jsmodules/sbProperties.jsm");
 Cu.import("resource://app/jsmodules/sbLibraryUtils.jsm");
 Cu.import("resource://app/jsmodules/kPlaylistCommands.jsm");
+Cu.import("resource://app/jsmodules/ArrayConverter.jsm");
+Cu.import("resource://app/jsmodules/SBJobUtils.jsm");
 
 // Make a namespace.
 if (typeof PlayCountImporterDialog == 'undefined') {
@@ -211,10 +213,20 @@ PlayCountImporterDialog.Controller = {
     this._autoFixSelectedButton.addEventListener("command", 
           function() { controller.onAutoFixSelected(); }, false);
       
+    // Not really that useful and it isn't obvious what it's used for    
+    /*
+    this._undoFixesButton = document.getElementById("undo-fixes-button");
+    this._undoFixesButton.addEventListener("command", 
+          function() { controller.onUndoFixes(); }, false);
+    */
+      
     this._globallyFixArtistCheck = document.getElementById("globally-fix-artist-checkbox");
     this._fixMetadataButton = document.getElementById("fix-metadata-button");
     this._fixMetadataButton.addEventListener("command", 
           function() { controller.onFixMetadata(); }, false);
+    this._saveToFileButton = document.getElementById("save-to-file-button");
+    this._saveToFileButton.addEventListener("command", 
+          function() { controller.onSaveToFile(); }, false);
           
     this._selectedRow = -1;
     this._fixedArtists = [];
@@ -285,6 +297,16 @@ PlayCountImporterDialog.Controller = {
     selectedIndex++;
     this._nilTreeView.selection.select(selectedIndex);
   },
+  
+  onUndoFixes: function(event) {
+    var combinedArrays = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
+    for (var index = 0; index < combinedArrays.length; ++index) {
+      combinedArrays[index].libArtistName = "";
+      combinedArrays[index].libTrackName = "";
+      combinedArrays[index].songGuids = null; 
+      this._nilTreeView.treebox.invalidate();
+    }
+  },
 
   onEditTrackInput: function(event) {
     this._trackTextHasChanged();
@@ -337,7 +359,7 @@ PlayCountImporterDialog.Controller = {
             	var trackEnum = tracksFromArtist.enumerate();
             	while (trackEnum.hasMoreElements()) {
               	var item = trackEnum.getNext();
-              	item.setProperty(SBProperties.artistName, combinedArrays[index].lfmArtistName);
+              	item.setProperty(SBProperties.artistName, curItem.lfmArtistName);
               	this._numSongsUpdated++;
               }
             }
@@ -350,6 +372,38 @@ PlayCountImporterDialog.Controller = {
         
       this._fixMetadataCall++;
       setTimeout("PlayCountImporterDialog.Controller.doFixMetadata()", 0);
+    }
+  },
+  
+  onSaveToFile: function(){
+    answer = confirm(this._strings.getString("saveToFileConfirm"));
+
+    if (answer == 0) {
+      return;
+    }
+    
+    var mediaItemArray = Components.classes["@songbirdnest.com/moz/xpcom/threadsafe-array;1"].createInstance(Components.interfaces.nsIMutableArray);
+    for (var index = 0; index < LibraryUtils.mainLibrary.length; index++) {
+      var mediaItem = LibraryUtils.mainLibrary.getItemByIndex(index);
+      if (LibraryUtils.canEditMetadata(mediaItem)) {
+        mediaItemArray.appendElement(mediaItem, false);
+      }
+    }
+    
+    if (mediaItemArray.length > 0) {
+      var service = Components.classes["@songbirdnest.com/Songbird/FileMetadataService;1"].getService(Components.interfaces.sbIFileMetadataService);
+      try {
+        var properties = new Array();
+        properties.push(SBProperties.trackName);
+        properties.push(SBProperties.artistName);
+          
+        var propArray = ArrayConverter.stringEnumerator(properties);
+        var job = service.write(mediaItemArray, propArray);
+
+        SBJobUtils.showProgressDialog(job, window, 0);
+      } catch (e) {
+        Components.utils.reportError(e);
+      }
     }
   },
   
@@ -1110,6 +1164,7 @@ PlayCountImporterDialog.Controller = {
     }
     this._importPlayCountsButton.setAttribute("disabled", "true");
     this._fixMetadataButton.setAttribute("disabled", "true");
+    this._saveToFileButton.setAttribute("disabled", "true");
     this._clearPlayCountsButton.setAttribute("disabled", "true");
     
     //this._artistField.setAttribute("disabled", "true");
@@ -1117,6 +1172,7 @@ PlayCountImporterDialog.Controller = {
     //this._removeButton.setAttribute("disabled", "true");
     this._autoFixButton.setAttribute("disabled", "true");
     this._autoFixSelectedButton.setAttribute("disabled", "true");
+    //this._undoFixesButton.setAttribute("disabled", "true");
     this._showFixedCheck.setAttribute("disabled", "true");
     
     this._inLibraryTree.setAttribute("disabled", "true");
@@ -1127,6 +1183,7 @@ PlayCountImporterDialog.Controller = {
     this._findPlayCountsButton.setAttribute("disabled", "false");
     this._importPlayCountsButton.setAttribute("disabled", "false");
     this._fixMetadataButton.setAttribute("disabled", "false");
+    this._saveToFileButton.setAttribute("disabled", "false");
     this._clearPlayCountsButton.setAttribute("disabled", "false");
     
     //this._artistField.setAttribute("disabled", "false");
@@ -1136,6 +1193,7 @@ PlayCountImporterDialog.Controller = {
     //this._removeButton.setAttribute("disabled", "false");
     this._autoFixButton.setAttribute("disabled", "false");
     this._autoFixSelectedButton.setAttribute("disabled", "false");
+    //this._undoFixesButton.setAttribute("disabled", "false");
     this._showFixedCheck.setAttribute("disabled", "false");
     
     this._inLibraryTree.setAttribute("disabled", "false");

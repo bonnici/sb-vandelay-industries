@@ -102,6 +102,7 @@
                     <!-- <button id="remove-button" label="&vandelay-industries.remove-button.label;" /> -->
                     <button id="auto-fix-single-button" label="&vandelay-industries.auto-fix-single-button.label;" />
                     <button id="auto-fix-button" label="&vandelay-industries.auto-fix-button.label;" />
+                    <!-- <button id="undo-fixes-button" label="&vandelay-industries.undo-fixes-button.label;" /> -->
                   </vbox>
                 </hbox>
               </vbox>
@@ -156,6 +157,7 @@
               <vbox>
                 <spacer flex="1" />
                 <button id="fix-metadata-button" width="100" label="&vandelay-industries.fix-tags-button.label;" />
+                <button id="save-to-file-button" width="100" label="&vandelay-industries.save-to-file-button.label;" />
                 <spacer height="10" width="10" />
               </vbox>
               <spacer height="10" width="10" />
