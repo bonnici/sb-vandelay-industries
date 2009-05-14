@@ -102,7 +102,7 @@
                     <!-- <button id="remove-button" label="&vandelay-industries.remove-button.label;" /> -->
                     <button id="auto-fix-single-button" label="&vandelay-industries.auto-fix-single-button.label;" />
                     <button id="auto-fix-button" label="&vandelay-industries.auto-fix-button.label;" />
-                    <!-- <button id="undo-fixes-button" label="&vandelay-industries.undo-fixes-button.label;" /> -->
+                    <button id="undo-fixes-button" label="&vandelay-industries.undo-fixes-button.label;" />
                   </vbox>
                 </hbox>
               </vbox>
@@ -117,6 +117,7 @@
         <tabs> 
           <tab label="&vandelay-industries.import-playcount-tab.label;" /> 
           <tab label="&vandelay-industries.fix-metadata-tab.label;" />
+          <tab label="&vandelay-industries.save-to-file-tab.label;" />
           <tab label="&vandelay-industries.clear-playcount-tab.label;" />
         </tabs> 
         <tabpanels> 
@@ -157,11 +158,33 @@
               <vbox>
                 <spacer flex="1" />
                 <button id="fix-metadata-button" width="100" label="&vandelay-industries.fix-tags-button.label;" />
-                <button id="save-to-file-button" width="100" label="&vandelay-industries.save-to-file-button.label;" />
                 <spacer height="10" width="10" />
               </vbox>
               <spacer height="10" width="10" />
             </hbox>          
+          </tabpanel>
+
+          <tabpanel>
+            <hbox flex="1">
+              <spacer height="10" width="10" />
+              <vbox flex="1">
+                <spacer height="10" width="10" />
+                <checkbox id="save-all-files-checkbox" label="&vandelay-industries.save-all-files-checkbox.label;" checked="false" />
+                <description>
+                  &vandelay-industries.save-all-files-desc.label;
+                </description>
+                <description>
+                  &vandelay-industries.save-to-file-desc.label;
+                </description>
+                <spacer height="10" width="10" />
+              </vbox>
+              <vbox>
+                <spacer flex="1" />
+                <button id="save-to-file-button" width="100" label="&vandelay-industries.save-to-file-button.label;" />
+                <spacer height="10" width="10" />
+              </vbox>
+              <spacer height="10" width="10" />
+            </hbox>
           </tabpanel>
             
           <tabpanel>

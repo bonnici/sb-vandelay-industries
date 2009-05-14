@@ -212,13 +212,9 @@ PlayCountImporterDialog.Controller = {
     this._autoFixSelectedButton = document.getElementById("auto-fix-single-button");
     this._autoFixSelectedButton.addEventListener("command", 
           function() { controller.onAutoFixSelected(); }, false);
-      
-    // Not really that useful and it isn't obvious what it's used for    
-    /*
     this._undoFixesButton = document.getElementById("undo-fixes-button");
     this._undoFixesButton.addEventListener("command", 
           function() { controller.onUndoFixes(); }, false);
-    */
       
     this._globallyFixArtistCheck = document.getElementById("globally-fix-artist-checkbox");
     this._fixMetadataButton = document.getElementById("fix-metadata-button");
@@ -351,7 +347,11 @@ PlayCountImporterDialog.Controller = {
           this._numSongsUpdated++;
         }
 
-        if (this._globallyFixArtists && curItem.lfmArtistName != curItem.libArtistName) {
+        if (this._globallyFixArtists
+           && 
+           // artist is different
+           (curItem.lfmArtistName.length != curItem.libArtistName.length || curItem.lfmArtistName.toLowerCase().indexOf(curItem.libArtistName.toLowerCase()) == -1)) {
+             
           var tracksFromArtist = this._findArtistInLibrary(curItem.libArtistName);
 
           if (tracksFromArtist != null) {
@@ -382,11 +382,30 @@ PlayCountImporterDialog.Controller = {
       return;
     }
     
+    var saveAllFiles = document.getElementById("save-all-files-checkbox").getAttribute("checked") == "true";
+    
     var mediaItemArray = Components.classes["@songbirdnest.com/moz/xpcom/threadsafe-array;1"].createInstance(Components.interfaces.nsIMutableArray);
-    for (var index = 0; index < LibraryUtils.mainLibrary.length; index++) {
-      var mediaItem = LibraryUtils.mainLibrary.getItemByIndex(index);
-      if (LibraryUtils.canEditMetadata(mediaItem)) {
-        mediaItemArray.appendElement(mediaItem, false);
+    
+    if (saveAllFiles) {
+      for (var index = 0; index < LibraryUtils.mainLibrary.length; index++) {
+        var mediaItem = LibraryUtils.mainLibrary.getItemByIndex(index);
+        if (LibraryUtils.canEditMetadata(mediaItem)) {
+          mediaItemArray.appendElement(mediaItem, false);
+        }
+      }
+    }
+    else {
+      var combinedArrays = this._nilTreeView.nilPlayCountArray.concat(this._nilTreeView.hiddenPlayCountArray);
+      for (var index = 0; index < combinedArrays.length; index++) {
+        var curItem = combinedArrays[index];
+        if (curItem.songGuids != null && curItem.songGuids.length > 0) {
+          for (var guidIndex = 0; guidIndex < curItem.songGuids.length; guidIndex++) {
+            var mediaItem = LibraryUtils.mainLibrary.getItemByGuid(curItem.songGuids[guidIndex]);
+            if (LibraryUtils.canEditMetadata(mediaItem)) {
+              mediaItemArray.appendElement(mediaItem, false);
+            }
+          }
+        }
       }
     }
     
@@ -396,6 +415,7 @@ PlayCountImporterDialog.Controller = {
         var properties = new Array();
         properties.push(SBProperties.trackName);
         properties.push(SBProperties.artistName);
+        properties.push(SBProperties.genre); // Need to re-save this because of a bug with numbered genres - e.g. Rock turns into "17 Rock" for some reason
           
         var propArray = ArrayConverter.stringEnumerator(properties);
         var job = service.write(mediaItemArray, propArray);
@@ -1172,7 +1192,7 @@ PlayCountImporterDialog.Controller = {
     //this._removeButton.setAttribute("disabled", "true");
     this._autoFixButton.setAttribute("disabled", "true");
     this._autoFixSelectedButton.setAttribute("disabled", "true");
-    //this._undoFixesButton.setAttribute("disabled", "true");
+    this._undoFixesButton.setAttribute("disabled", "true");
     this._showFixedCheck.setAttribute("disabled", "true");
     
     this._inLibraryTree.setAttribute("disabled", "true");
@@ -1193,7 +1213,7 @@ PlayCountImporterDialog.Controller = {
     //this._removeButton.setAttribute("disabled", "false");
     this._autoFixButton.setAttribute("disabled", "false");
     this._autoFixSelectedButton.setAttribute("disabled", "false");
-    //this._undoFixesButton.setAttribute("disabled", "false");
+    this._undoFixesButton.setAttribute("disabled", "false");
     this._showFixedCheck.setAttribute("disabled", "false");
     
     this._inLibraryTree.setAttribute("disabled", "false");
