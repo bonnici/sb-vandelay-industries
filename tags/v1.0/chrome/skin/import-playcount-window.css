@@ -1,0 +1,19 @@
+window 
+{
+  font-family:Verdana, Arial, sans-serif;
+}
+
+menulist
+{
+  font-size:smaller;  
+}
+
+treechildren::-moz-tree-cell-text(matchedText)
+{
+  color: green;
+}
+
+treechildren::-moz-tree-cell-text(unmatchedText)
+{
+  color: red;
+}

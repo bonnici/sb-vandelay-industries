@@ -1,0 +1,39 @@
+<!ENTITY vandelay-industries.window-title "Import Last.fm Play Counts and Metadata">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Import Last.fm Play Counts and Metadata">
+<!ENTITY vandelay-industries.find-playcount-group.label "Get Library Data">
+<!ENTITY vandelay-industries.lastfm-username.label "Last.fm username:">
+<!ENTITY vandelay-industries.resume-search.label "Resume">
+<!ENTITY vandelay-industries.artist-header.label "Artist">
+<!ENTITY vandelay-industries.title-header.label "Title">
+<!ENTITY vandelay-industries.playcount-header.label "Play Count">
+<!ENTITY vandelay-industries.inlibrary-header.label "In Library">
+<!ENTITY vandelay-industries.importquestion-header.label "Import?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Get Last.fm Library Data">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Only overwrite play count if it is more than the current play count">
+<!ENTITY vandelay-industries.update-first-match.label "Only update the play count of the first matching song in the library">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Reset Play Counts">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Warning: This will erase the play count of every song in your library">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Last.fm Artist">
+<!ENTITY vandelay-industries.lfm-title-header.label "Last.fm Title">
+<!ENTITY vandelay-industries.lib-artist-header.label "Library Artist">
+<!ENTITY vandelay-industries.lib-title-header.label "Library Title">
+<!ENTITY vandelay-industries.edit-artist.label "Artist:">
+<!ENTITY vandelay-industries.edit-title.label "Title:">
+<!ENTITY vandelay-industries.remove-button.label "Remove">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Show Fixed Tracks">
+<!ENTITY vandelay-industries.auto-fix-button.label "Auto-Fix All">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Import Play Counts">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Clear Play Counts">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Fix Metadata">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Globally fix artists">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "If this option is checked, every time a track is fixed, the artist tag of all tracks with the mistagged artist will be corrected, even if that particular track does not appear in the list. ">
+<!ENTITY vandelay-industries.fix-tags-button.label "Fix Tags">
+<!ENTITY vandelay-industries.add-to-existing.label "Add counts to existing play counts instead of overwriting them">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Note: Only the songs in the 'Not Found In Library' tab which have the 'Import?' column checked will be updated. These changes will only be written to your library and are not saved to file.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "Auto-Fix Selected">
+<!ENTITY vandelay-industries.undo-fixes-button.label "Reset All">
+<!ENTITY vandelay-industries.save-to-file-button.label "Save To File">
+<!ENTITY vandelay-industries.save-to-file-tab.label "Save Metadata To File">
+<!ENTITY vandelay-industries.save-all-files-checkbox.label "Save all files">
+<!ENTITY vandelay-industries.save-all-files-desc.label "If this option is checked, the metadata will be written to all files in your library instead of just the ones in the 'Not Found In Library' tab. If you want to globally fix artist tags, make sure this box is checked.">
+<!ENTITY vandelay-industries.save-to-file-desc.label "Note: This will permanently save the artist and track name as it appears in your library to file and cannot be undone. It is recommended that you back up your music collection before you use this.">
