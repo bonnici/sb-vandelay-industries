@@ -7,6 +7,7 @@
     title="&vandelay-industries.window-title;"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     
+    <script src="shared.js" />
     <script src="import-playcount-window.js" />
     
     <stringbundleset id="stringbundleset"> 
@@ -18,7 +19,7 @@
         <caption label="&vandelay-industries.find-playcount-group.label;" />
         <hbox align="center">
           <label control="last-fm-username-field" value="&vandelay-industries.lastfm-username.label;"/>
-          <textbox id="last-fm-username-field"/>
+          <textbox id="last-fm-username-field" flex="1" />
           <button id="find-playcount-button" width="100" />  
           <checkbox id="resume-search" label="&vandelay-industries.resume-search.label;" checked="false" hidden="true"/>
         </hbox>
