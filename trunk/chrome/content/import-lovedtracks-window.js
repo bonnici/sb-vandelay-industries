@@ -208,9 +208,9 @@ LovedTracksImporterDialog.Controller = {
     var tracks = xml.getElementsByTagName('track');
     
     for (var trackIndex = 0; trackIndex < tracks.length; trackIndex++) {      
-      var artistName = this._getArtistName(tracks[trackIndex]);
-      var trackName = this._getTrackName(tracks[trackIndex]);
-      var songGuids = this._findSongInLibrary(artistName, trackName);
+      var artistName = VandelayIndustriesShared.Functions.getArtistName(tracks[trackIndex]);
+      var trackName = VandelayIndustriesShared.Functions.getTrackName(tracks[trackIndex]);
+      var songGuids = VandelayIndustriesShared.Functions.findSongInLibrary(artistName, trackName);
       
       var libArtistName = "";
       var libTrackName = "";
@@ -223,15 +223,15 @@ LovedTracksImporterDialog.Controller = {
       this._treeView.dataArray.push(newItem);
     }
     
-    //todo shared code
+    //todo this could be moved into shared code
     for (var index = 0; index < this._treeView.dataArray.length; index++) {
     
       if (this._treeView.dataArray[index].libArtistName.length == 0 && this._treeView.dataArray[index].libTrackName.length == 0) {
         var trackAtIndex = this._treeView.dataArray[index].lfmTrackName;
         var artistAtIndex = this._treeView.dataArray[index].lfmArtistName;
 
-        var tracksMatchingName = this._findTrackInLibrary(trackAtIndex);
-        var artistsMatchingName = this._findArtistInLibrary(artistAtIndex);
+        var tracksMatchingName = VandelayIndustriesShared.Functions.findTrackInLibrary(trackAtIndex);
+        var artistsMatchingName = VandelayIndustriesShared.Functions.findArtistInLibrary(artistAtIndex);
               
         var bestArtist = "";
         var bestArtistScore = -1000;
@@ -241,7 +241,7 @@ LovedTracksImporterDialog.Controller = {
           while (trackEnum.hasMoreElements()) {
             var trackItem = trackEnum.getNext();
             var artist = trackItem.getProperty(SBProperties.artistName);
-            var curArtistScore = this._getDifferenceScore(artist, artistAtIndex);
+            var curArtistScore = VandelayIndustriesShared.Functions.getDifferenceScore(artist, artistAtIndex);
             
             if (curArtistScore > bestArtistScore) {
               bestArtist = artist;
@@ -260,7 +260,7 @@ LovedTracksImporterDialog.Controller = {
           while (artistEnum.hasMoreElements()) {
             var artistItem = artistEnum.getNext();
             var track = artistItem.getProperty(SBProperties.trackName);
-            var curTrackScore = this._getDifferenceScore(track, trackAtIndex);
+            var curTrackScore = VandelayIndustriesShared.Functions.getDifferenceScore(track, trackAtIndex);
             
             if (curTrackScore > bestTrackScore) {
               bestTrack = track;
@@ -292,7 +292,7 @@ LovedTracksImporterDialog.Controller = {
               (bestArtistScore >= -5 && ((bestArtistScore*-1 < bestArtist.length/2) && (bestArtistScore*-1 < artistAtIndex.length/2)))
           ) 
           {
-            var guids = this._findSongInLibrary(bestArtist, trackAtIndex);
+            var guids = VandelayIndustriesShared.Functions.findSongInLibrary(bestArtist, trackAtIndex);
             if (guids.length > 0) 
             {
               this._treeView.setLibInfo(index, bestArtist, trackAtIndex, guids);
@@ -309,7 +309,7 @@ LovedTracksImporterDialog.Controller = {
               (bestTrackScore >= -5 && ((bestTrackScore*-1 < bestTrack.length/2) && (bestTrackScore*-1 < trackAtIndex.length/2)))
           ) 
           {
-            var guids = this._findSongInLibrary(artistAtIndex, bestTrack);
+            var guids = VandelayIndustriesShared.Functions.findSongInLibrary(artistAtIndex, bestTrack);
             if (guids.length > 0) 
             {
               this._treeView.setLibInfo(index, artistAtIndex, bestTrack, guids);
@@ -364,6 +364,7 @@ LovedTracksImporterDialog.Controller = {
     }
   },
   
+  //todo this could be moved into shared code
   onTreeSelection: function(event) {
     this._selectedRow = event.target.currentIndex;
     this._updateTreeAfterSelection();
@@ -380,11 +381,15 @@ LovedTracksImporterDialog.Controller = {
     this._trackTextHasChanged();
   },
   
-  //todo shared?
+  _updateTreeView: function() {
+    this._treeView.update();
+    this._tree.view = this._treeView;
+  },
+  
   _artistTextHasChanged: function() {
     var items = null;
     if (this._artistField.value.length > 0) {
-      items = this._findArtistInLibrary(this._artistField.value);
+      items = VandelayIndustriesShared.Functions.findArtistInLibrary(this._artistField.value);
     }
     this._artistCheck.setAttribute("checked", items != null && items.length > 0 ? "true" : "false");
     
@@ -412,7 +417,7 @@ LovedTracksImporterDialog.Controller = {
       	if (foundTracks[track] == null || foundTracks[track] != true) {
       	  foundTracks[track] = true;
       	  
-          var curTrackScore = this._getDifferenceScore(track, lfmTrackName);
+          var curTrackScore = VandelayIndustriesShared.Functions.getDifferenceScore(track, lfmTrackName);
           weightedTracks.push({trackName: track, score: curTrackScore});
         }
   		}
@@ -420,8 +425,12 @@ LovedTracksImporterDialog.Controller = {
   	catch (e) {
   	}
   	
-    //todo if score is shit, sort by name
-  	function sortByScore(a, b) {
+    function sortByScore(a, b) {
+      // If score is really bad, just sort by name
+      if (a.score < -5 && b.score < -5) {
+        return a.trackName.toLowerCase() > b.trackName.toLowerCase();
+      }
+      
   	  return a.score < b.score;
   	}
   	
@@ -435,7 +444,7 @@ LovedTracksImporterDialog.Controller = {
   },
   
   _updateSelectedTrack: function() {
-    var guids = this._findSongInLibrary(this._artistField.value, this._trackField.value);
+    var guids = VandelayIndustriesShared.Functions.findSongInLibrary(this._artistField.value, this._trackField.value);
     if (guids.length > 0) {
       this._treeView.setLibInfo(this._selectedRow, this._artistField.value, this._trackField.value, guids);
     }
@@ -444,7 +453,7 @@ LovedTracksImporterDialog.Controller = {
   _trackTextHasChanged: function() {
     var items = null;
     if (this._trackField.value.length > 0) {
-      items = this._findTrackInLibrary(this._trackField.value);
+      items = VandelayIndustriesShared.Functions.findTrackInLibrary(this._trackField.value);
     }
     
     this._trackCheck.setAttribute("checked", items != null && items.length > 0 ? "true" : "false");
@@ -469,7 +478,7 @@ LovedTracksImporterDialog.Controller = {
       	  foundArtists[artist] = true;
       	
           // Give each potential artist a score
-          var curArtistScore = this._getDifferenceScore(artist, lfmArtistName);
+          var curArtistScore = VandelayIndustriesShared.Functions.getDifferenceScore(artist, lfmArtistName);
           weightedArtists.push({artistName: artist, score: curArtistScore});
       	}
       }
@@ -478,6 +487,10 @@ LovedTracksImporterDialog.Controller = {
   	}
 
     function sortByScore(a, b) {
+      // If score is really bad, just sort by name
+      if (a.score < -5 && b.score < -5) {
+        return a.artistName.toLowerCase() > b.artistName.toLowerCase();
+      }
   	  return a.score < b.score;
   	}
 
@@ -491,257 +504,6 @@ LovedTracksImporterDialog.Controller = {
   	
     this._updateSelectedTrack();
   },
-  
-  //todo move these into a shared file
-  _getArtistName: function(trackNode) {
-    var artistElement = trackNode.getElementsByTagName('artist');
-    if (artistElement == null || artistElement.length < 1) {
-      return "";
-    }
-    
-    var nameElement = artistElement[0].getElementsByTagName('name');
-    if (nameElement == null || nameElement.length < 1) {
-      return "";
-    }
-    
-    return nameElement[0].textContent;
-  },
-
-  _getTrackName: function(trackNode) {
-    var nameElement = trackNode.getElementsByTagName('name');
-    if (nameElement == null || nameElement.length < 1) {
-      return "";
-    }
-    
-    return nameElement[0].textContent;
-  },
-  
-  _findSongInLibrary: function(artist, track) {
-    var songProps = Cc["@songbirdnest.com/Songbird/Properties/MutablePropertyArray;1"]
-     	                  .createInstance(Ci.sbIMutablePropertyArray);
-    songProps.appendProperty(SBProperties.artistName, artist);  
-    songProps.appendProperty(SBProperties.trackName, track);
-    
-    var guids = [];
-    
-    try {
-    	var itemEnum = LibraryUtils.mainLibrary.getItemsByProperties(songProps).enumerate();
-    	while (itemEnum.hasMoreElements()) {
-      	var item = itemEnum.getNext();
-    		guids.push(item.guid);
-  		}
-		}
-  	catch (e) {
-  	}
-			
-		return guids;
-  },
-  
-  _findArtistInLibrary: function(artist) {
-    try {
-      var mediaItems = LibraryUtils.mainLibrary.getItemsByProperty(SBProperties.artistName, artist);
-		  return mediaItems;
-	  } 
-	  catch (e) {
-	    return null;
-	  }
-  },
-  
-  _findTrackInLibrary: function(track) {
-    try {
-      var mediaItems = LibraryUtils.mainLibrary.getItemsByProperty(SBProperties.trackName, track);
-		  return mediaItems
-    } 
-    catch (e) {
-      return null;
-    }
-  },
-  
-  // Score is above zero if it matches using some replacements, negative if it takes some corrections
-  _getDifferenceScore: function(from, to) {
-    
-    if (from == to) {
-      return 100;
-    }
-
-    from = from.toLowerCase();
-    to = to.toLowerCase();
-    if (from == to) {
-      return 99;
-    }
-        
-    from = this._stripWhitespace(from);
-    to = this._stripWhitespace(to);
-    if (from == to) {
-      return 98;
-    }
-    
-    from = this._andToAmpersand(from);
-    to = this._andToAmpersand(to);
-    if (from == to) {
-      return 97;
-    }
-    
-    var fromWithoutStuffInBrackets = this._stripStuffInBrackets(from);
-    var toWithoutStuffInBrackets = this._stripStuffInBrackets(to);
-    var fromWithoutStuffInQuotations = this._stripStuffInQuotations(from);
-    var toWithoutStuffInQuotations = this._stripStuffInQuotations(to);
-    
-    var toIsInFrom = from.indexOf(to) >= 0;
-    var fromIsInTo = to.indexOf(from) >= 0;
-    
-    // punctuation
-    var fromOld = from;
-    var toOld = to;
-    from = this._stripPunctuation(from);
-    to = this._stripPunctuation(to);
-
-    var allSpecial = false;
-    if (from.length == 0) {
-      from = fromOld;
-      allSpecial = true;
-    }
-    if (to.length == 0) {
-      to = toOld;
-      allSpecial = true;
-    }
-    
-    if (allSpecial) {
-      return 0 - this._levenshteinDistance(from, to);
-    }
-    
-    if (from == to) {
-      return 96;
-    }
-    
-    // brackets (don't keep)
-    if (this._stripPunctuation(fromWithoutStuffInBrackets) == this._stripPunctuation(toWithoutStuffInBrackets)) {
-      return 95;
-    }
-    
-    // quotations (don't keep)
-    if (this._stripPunctuation(fromWithoutStuffInQuotations) == this._stripPunctuation(toWithoutStuffInQuotations)) {
-      return 94;
-    }
-    
-    // the
-    from = this._stripThes(from);
-    to = this._stripThes(to);
-    if (from == to) {
-      return 93;
-    }
-    
-    // substrings
-    if (toIsInFrom || fromIsInTo) {
-      return 92;
-    }
-    
-    return 0 - this._levenshteinDistance(from, to);
-  },
-  
-  // all assume lower case
-  _andToAmpersand: function(text) {
-    var splitted = text.split("and");
-    var joined = splitted.join("&");
-    return joined;
-  },
-
-  _stripWhitespace: function(text) {
-    // don't care about tabs or other whitespace
-    return text.replace(/ /g, "");
-  },
-
-  _stripPunctuation: function(text) {
-    return text.replace(/[\!\@\#\$\%\^\*\-\=\_\(\)\+\[\]\\\{\}\|\;\'\:\"\,\.\/\<\>\?\`\~]/g, "");
-  },
-  
-  _stripStuffInBrackets: function(text) {
-    text = text.replace(/\(.*\)/g, "");
-    text = text.replace(/\[.*\]/g, "");
-    text = text.replace(/\{.*\}/g, "");
-    return text.replace(/<.*>/g, "");
-  },
-  
-  _stripStuffInQuotations: function(text) {
-    text = text.replace(/".*"/g, "");
-    return text.replace(/'.*'/g, "")
-  },
-  
-  _stripThes: function(text) {
-    text = text.replace(/^the/g, "");
-    text = text.replace(/the$/g, "");
-    return text;
-  },
-  
-  // From http://snippets.dzone.com/posts/show/6942
-  //based on: http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance
-  //and:  http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
-  _levenshteinDistance: function(a, b)
-  {
-  	var i;
-  	var j;
-  	var cost;
-  	var d = new Array();
-
-  	if ( a.length == 0 )
-  	{
-  		return b.length;
-  	}
-
-  	if ( b.length == 0 )
-  	{
-  		return a.length;
-  	}
-
-  	for ( i = 0; i <= a.length; i++ )
-  	{
-  		d[ i ] = new Array();
-  		d[ i ][ 0 ] = i;
-  	}
-
-  	for ( j = 0; j <= b.length; j++ )
-  	{
-  		d[ 0 ][ j ] = j;
-  	}
-
-  	for ( i = 1; i <= a.length; i++ )
-  	{
-  		for ( j = 1; j <= b.length; j++ )
-  		{
-  			if ( a.charAt( i - 1 ) == b.charAt( j - 1 ) )
-  			{
-  				cost = 0;
-  			}
-  			else
-  			{
-  				cost = 1;
-  			}
-
-  			d[ i ][ j ] = Math.min( d[ i - 1 ][ j ] + 1, d[ i ][ j - 1 ] + 1, d[ i - 1 ][ j - 1 ] + cost );
-
-  			if(
-           i > 1 && 
-           j > 1 &&  
-           a.charAt(i - 1) == b.charAt(j-2) && 
-           a.charAt(i-2) == b.charAt(j-1)
-           ){
-            d[i][j] = Math.min(
-              d[i][j],
-              d[i - 2][j - 2] + cost
-            )
-
-  			}
-  		}
-  	}
-
-  	return d[ a.length ][ b.length ];
-  },
-  
-  //non-shared
-  _updateTreeView: function() {
-    this._treeView.update();
-    this._tree.view = this._treeView;
-  }
   
 };
 
