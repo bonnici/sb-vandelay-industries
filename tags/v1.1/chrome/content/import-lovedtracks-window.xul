@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://vandelay-industries/skin/global.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://vandelay-industries/locale/overlay.dtd">
+
+<window
+    id="import-lovedtracks-window"
+    title="&vandelay-industries.importlovedtracks-menuitem.label;"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    
+    <script src="shared.js" />
+    <script src="import-lovedtracks-window.js" />
+    
+    <stringbundleset id="stringbundleset"> 
+       <stringbundle id="vandelay-industries-strings" src="chrome://vandelay-industries/locale/overlay.properties"/>
+    </stringbundleset>
+    
+    <vbox flex="1" style="overflow: auto">
+      <groupbox>
+        <caption label="&vandelay-industries.lovedtracks.username-group.label;" />
+        <hbox align="center">
+          <textbox id="last-fm-username-field" flex="1"/>
+          <button id="go-button" label="&vandelay-industries.lovedtracks.go-button-label;" />  
+        </hbox>
+      </groupbox>
+      
+      <groupbox flex="1">
+        <caption label="&vandelay-industries.lovedtracks.loved-tracks-group.label;" />
+        <tree id="loved-tracks-tree" flex="1" hidecolumnpicker="true" seltype="single" onselect="LovedTracksImporterDialog.Controller.onTreeSelection(event);" sortDirection="descending" sortResource="nil-play-count-column">
+          <treecols>
+            <treecol id="lfm-artist-column" label="&vandelay-industries.lfm-artist-header.label;" flex="1" />
+            <splitter class="tree-splitter" />
+            <treecol id="lfm-title-column" label="&vandelay-industries.lfm-title-header.label;" flex="2" />
+            <splitter class="tree-splitter" />
+            <treecol id="lib-artist-column" label="&vandelay-industries.lib-artist-header.label;" flex="1" />
+            <splitter class="tree-splitter" />
+            <treecol id="lib-title-column" label="&vandelay-industries.lib-title-header.label;" flex="2" />
+          </treecols>
+
+          <treechildren/>
+
+        </tree>
+        
+        <hbox align="center">
+          <vbox flex="1">
+            <grid>
+              <columns>
+                <column />
+                <column flex="1" />
+                <column />
+              </columns>
+              <rows>
+                <row align="center">
+                  <label value="&vandelay-industries.edit-artist.label;"/> 
+                  <menulist id="edit-artist-textbox" flex="1" editable="true" oninput="LovedTracksImporterDialog.Controller.onEditArtistInput(event);" oncommand="LovedTracksImporterDialog.Controller.onEditArtistInput(event);" >
+                    <menupopup id="edit-artist-list" />
+                  </menulist>
+                  <checkbox id="edit-artist-checkbox" disabled="true" />
+                </row>
+                <row align="center">
+                  <label value="&vandelay-industries.edit-title.label;"/> 
+                  <menulist id="edit-track-textbox" flex="1" editable="true" oninput="LovedTracksImporterDialog.Controller.onEditTrackInput(event);" oncommand="LovedTracksImporterDialog.Controller.onEditTrackInput(event);" > 
+                    <menupopup id="edit-track-list" />
+                  </menulist>
+                  <checkbox id="edit-track-checkbox" disabled="true" />
+                </row>
+              </rows>
+            </grid>
+          </vbox>
+          
+          <vbox>
+            <button id="remove-button" label="&vandelay-industries.lovedtracks.remove-button-label;" /> 
+            <button id="import-button" label="&vandelay-industries.lovedtracks.import-button-label;" /> 
+          </vbox>
+        </hbox>
+        
+        
+      </groupbox>
+    </vbox>
+    
+</window>
