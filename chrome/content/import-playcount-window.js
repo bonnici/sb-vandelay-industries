@@ -455,7 +455,7 @@ PlayCountImporterDialog.Controller = {
       }
 
       var username = document.getElementById("last-fm-username-field").value;
-      username = escape(username);
+      //username = escape(username);
 
       if (username == null || username == "") {
         alert(this._strings.getString("noUsernameError"));

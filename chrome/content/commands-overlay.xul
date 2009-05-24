@@ -6,6 +6,7 @@
   
   <commandset id="mainCommandSet">
     <command id="vandelay-industries-importplaycount-cmd"  />
+    <command id="vandelay-industries-importlovedtracks-cmd"  />
   </commandset>
   
 </overlay>
