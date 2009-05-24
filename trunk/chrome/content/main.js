@@ -41,6 +41,10 @@ VandelayIndustries.Controller =
     this._importPlayCountCmd = document.getElementById("vandelay-industries-importplaycount-cmd");
     this._importPlayCountCmd.addEventListener("command", 
          function() { controller.doImportPlayCount(); }, false);
+         
+    this._importLovedTracksCmd = document.getElementById("vandelay-industries-importlovedtracks-cmd");
+    this._importLovedTracksCmd.addEventListener("command", 
+         function() { controller.doImportLovedTracks(); }, false);
 
   },
 
@@ -56,6 +60,16 @@ VandelayIndustries.Controller =
       "chrome://vandelay-industries/content/import-playcount-window.xul", 
       "import-playcount-window", 
       "chrome,centerscreen,width=620,height=580,resizable=yes"
+    );
+  },
+  
+  doImportLovedTracks : function() 
+  {
+    window.open
+    (
+      "chrome://vandelay-industries/content/import-lovedtracks-window.xul", 
+      "import-lovedtracks-window", 
+      "chrome,centerscreen,width=450,height=500,resizable=yes"
     );
   },
 

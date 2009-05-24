@@ -37,3 +37,10 @@
 <!ENTITY vandelay-industries.save-all-files-checkbox.label "Save all files">
 <!ENTITY vandelay-industries.save-all-files-desc.label "If this option is checked, the metadata will be written to all files in your library instead of just the ones in the 'Not Found In Library' tab. If you want to globally fix artist tags, make sure this box is checked.">
 <!ENTITY vandelay-industries.save-to-file-desc.label "Note: This will permanently save the artist and track name as it appears in your library to file and cannot be undone. It is recommended that you back up your music collection before you use this.">
+<!ENTITY vandelay-industries.main-menu.label "Vandelay Industries">
+<!ENTITY vandelay-industries.importlovedtracks-menuitem.label "Import Loved Tracks">
+<!ENTITY vandelay-industries.lovedtracks.username-group.label "Last.fm Username">
+<!ENTITY vandelay-industries.lovedtracks.go-button-label "Go">
+<!ENTITY vandelay-industries.lovedtracks.loved-tracks-group.label "Loved Tracks">
+<!ENTITY vandelay-industries.lovedtracks.import-button-label "Import">
+<!ENTITY vandelay-industries.lovedtracks.remove-button-label "Remove">
