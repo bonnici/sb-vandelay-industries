@@ -116,7 +116,7 @@ LovedTracksImporterDialog.Controller = {
     
     this._findLovedTracksButton = document.getElementById("go-button");
     this._findLovedTracksButton.addEventListener("command", 
-          function() { controller.findLovedTracks(); }, false);
+          function() { controller.findLovedTracks(1); }, false);
     this._removeButton = document.getElementById("remove-button");
     this._removeButton.addEventListener("command", 
           function() { controller.removeTrack(); }, false);
@@ -165,11 +165,12 @@ LovedTracksImporterDialog.Controller = {
     this._updateTreeAfterSelection();
   },
   
-  findLovedTracks: function() {
+  findLovedTracks: function(pageNum) {
   
     var username = document.getElementById("last-fm-username-field").value;
     var requestUri = LAST_FM_ROOT_URL + "?method=" + USER_GETLOVEDTRACKS_METHOD + 
-                        "&user=" + username +
+                        "&user=" + username + 
+                        "&page=" + pageNum +
                         "&api_key=" + LAST_FM_API_KEY;
 
     var request = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Ci.nsIXMLHttpRequest);
@@ -202,7 +203,9 @@ LovedTracksImporterDialog.Controller = {
     
     //alert(request.responseText);
     
-    this._treeView.dataArray = [];
+    if (pageNum == 1) {
+      this._treeView.dataArray = [];
+    }
     
     var xml = request.responseXML;
     var tracks = xml.getElementsByTagName('track');
@@ -321,6 +324,18 @@ LovedTracksImporterDialog.Controller = {
     
     this._updateTreeView();
     
+    // Get the total number of pages
+    var lovedtracks = xml.getElementsByTagName('lovedtracks');
+    if (lovedtracks == null || lovedtracks.length < 1 || !lovedtracks[0].hasAttribute("totalPages")) {
+      return;
+    }
+    
+    var totalPages = lovedtracks[0].getAttribute("totalPages");
+    
+    // If there are more pages, process the next one
+    if (totalPages > 0 && totalPages > pageNum) {
+      this.findLovedTracks(pageNum+1);
+    }
   },
   
   importTracks: function() {
