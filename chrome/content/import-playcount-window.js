@@ -198,6 +198,8 @@ PlayCountImporterDialog.Controller = {
     this._trackField = document.getElementById("edit-track-textbox");
     this._trackCheck = document.getElementById("edit-track-checkbox");
     this._showFixedCheck = document.getElementById("show-fixed-checkbox");
+    this._nilSelectAllCheck = document.getElementById("nil-select-all-checkbox");
+    this._ilSelectAllCheck = document.getElementById("il-select-all-checkbox");
     
     // Disabled since I can't stop the tree from scrolling to the top after a remove
     /*
@@ -316,6 +318,16 @@ PlayCountImporterDialog.Controller = {
     else {
       this._hideFixedlNilRows();
     }
+  },
+  
+  onNilSelectAll: function(event) {
+    var checked = this._nilSelectAllCheck.getAttribute("checked") == "true";
+    this._selectAllRows(true, checked);
+  },
+  
+  onIlSelectAll: function(event) {
+    var checked = this._ilSelectAllCheck.getAttribute("checked") == "true";
+    this._selectAllRows(false, checked);
   },
 
   onFixMetadata: function(event) {
@@ -1399,6 +1411,16 @@ PlayCountImporterDialog.Controller = {
     }
     this._updateTreeViews();
     this._updateNilTreeAfterSelection();
+  },
+  
+  _selectAllRows: function(nil, selected) {
+    var array = nil ? this._nilTreeView.nilPlayCountArray : this._treeView.playCountArray;
+  
+    for (var index = 0; index < array.length; index++) {
+      array[index].importIt = selected;
+    }
+    
+    this._updateTreeViews();
   },
   
   _updateAllRowsWithThisArtist: function(oldArtist, newArtist) {

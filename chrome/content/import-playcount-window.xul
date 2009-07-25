@@ -31,24 +31,30 @@
           </tabs> 
           <tabpanels flex="1"> 
             <tabpanel id="in-library">
-              <hbox flex="1">
-                <tree id="playcount-list" flex="1" hidecolumnpicker="true" seltype="single" editable="true" sortDirection="descending" sortResource="play-count-column">
-                  <treecols>
-                    <treecol id="artist-column" label="&vandelay-industries.artist-header.label;" flex="2" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
-                    <splitter class="tree-splitter" />
-                    <treecol id="title-column" label="&vandelay-industries.title-header.label;" flex="3"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
-                    <splitter class="tree-splitter" />
-                    <treecol id="play-count-column" label="&vandelay-industries.playcount-header.label;" width="60"  class="sortDirectionIndicator" sortDirection="descending" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
-                    <splitter class="tree-splitter" />
-                    <treecol id="in-library-column" label="&vandelay-industries.inlibrary-header.label;" width="60"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
-                    <splitter class="tree-splitter" />
-                    <treecol id="import-column" label="&vandelay-industries.importquestion-header.label;" type="checkbox" editable="true"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
-                  </treecols>
+              <vbox flex="1">
+                <hbox flex="1">
+                  <tree id="playcount-list" flex="1" hidecolumnpicker="true" seltype="single" editable="true" sortDirection="descending" sortResource="play-count-column">
+                    <treecols>
+                      <treecol id="artist-column" label="&vandelay-industries.artist-header.label;" flex="2" class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
+                      <splitter class="tree-splitter" />
+                      <treecol id="title-column" label="&vandelay-industries.title-header.label;" flex="3"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
+                      <splitter class="tree-splitter" />
+                      <treecol id="play-count-column" label="&vandelay-industries.playcount-header.label;" width="60"  class="sortDirectionIndicator" sortDirection="descending" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
+                      <splitter class="tree-splitter" />
+                      <treecol id="in-library-column" label="&vandelay-industries.inlibrary-header.label;" width="60"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
+                      <splitter class="tree-splitter" />
+                      <treecol id="import-column" label="&vandelay-industries.importquestion-header.label;" type="checkbox" editable="true"  class="sortDirectionIndicator" onclick="PlayCountImporterDialog.Controller.sortInLibList(this)"/>
+                    </treecols>
 
-                  <treechildren/>
+                    <treechildren/>
 
-                </tree>
-              </hbox>
+                  </tree>
+                </hbox>
+                <hbox>
+                  <spacer flex="1" />
+                  <checkbox id="il-select-all-checkbox" label="&vandelay-industries.select-all-checkbox.label;" checked="true" oncommand="PlayCountImporterDialog.Controller.onIlSelectAll(event);" />
+                </hbox>
+              </vbox>
             </tabpanel>
             <tabpanel id="not-in-library">
               <vbox flex="1">
@@ -72,40 +78,46 @@
 
                   </tree>
                 </hbox>
-                <hbox align="center">
-                  <vbox flex="1">
-				            <grid>
-                      <columns>
-                        <column />
-                        <column flex="1" />
-                        <column />
-                      </columns>
-                      <rows>
-                        <row align="center">
-                          <label value="&vandelay-industries.edit-artist.label;"/> 
-                          <menulist id="edit-artist-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditArtistInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditArtistInput(event);" >
-                            <menupopup id="edit-artist-list" />
-                          </menulist>
-                          <checkbox id="edit-artist-checkbox" disabled="true" />
-                        </row>
-                        <row align="center">
-                          <label value="&vandelay-industries.edit-title.label;"/> 
-                          <menulist id="edit-track-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditTrackInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditTrackInput(event);" > 
-                            <menupopup id="edit-track-list" />
-                          </menulist>
-                          <checkbox id="edit-track-checkbox" disabled="true" />
-                        </row>
-                      </rows>
-                    </grid>
-                  </vbox>
-                  <vbox>
+                <vbox>
+                  <hbox>
+                    <spacer flex="1" />
                     <checkbox id="show-fixed-checkbox" label="&vandelay-industries.show-fixed-checkbox.label;" checked="true" oncommand="PlayCountImporterDialog.Controller.onShowFixedCheckCommand(event);" />
-                    <!-- <button id="remove-button" label="&vandelay-industries.remove-button.label;" /> -->
-                    <button id="auto-fix-single-button" label="&vandelay-industries.auto-fix-single-button.label;" />
-                    <button id="auto-fix-button" label="&vandelay-industries.auto-fix-button.label;" />
-                    <button id="undo-fixes-button" label="&vandelay-industries.undo-fixes-button.label;" />
-                  </vbox>
-                </hbox>
+                    <checkbox id="nil-select-all-checkbox" label="&vandelay-industries.select-all-checkbox.label;" checked="true" oncommand="PlayCountImporterDialog.Controller.onNilSelectAll(event);" />
+                  </hbox>
+                  <hbox align="center">
+                    <vbox flex="1">
+                      <grid>
+                        <columns>
+                          <column />
+                          <column flex="1" />
+                          <column />
+                        </columns>
+                        <rows>
+                          <row align="center">
+                            <label value="&vandelay-industries.edit-artist.label;"/> 
+                            <menulist id="edit-artist-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditArtistInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditArtistInput(event);" >
+                              <menupopup id="edit-artist-list" />
+                            </menulist>
+                            <checkbox id="edit-artist-checkbox" disabled="true" />
+                          </row>
+                          <row align="center">
+                            <label value="&vandelay-industries.edit-title.label;"/> 
+                            <menulist id="edit-track-textbox" flex="1" editable="true" oninput="PlayCountImporterDialog.Controller.onEditTrackInput(event);" oncommand="PlayCountImporterDialog.Controller.onEditTrackInput(event);" > 
+                              <menupopup id="edit-track-list" />
+                            </menulist>
+                            <checkbox id="edit-track-checkbox" disabled="true" />
+                          </row>
+                        </rows>
+                      </grid>
+                    </vbox>
+                    <vbox>
+                      <!-- <button id="remove-button" label="&vandelay-industries.remove-button.label;" /> -->
+                      <button id="auto-fix-single-button" label="&vandelay-industries.auto-fix-single-button.label;" />
+                      <button id="auto-fix-button" label="&vandelay-industries.auto-fix-button.label;" />
+                      <button id="undo-fixes-button" label="&vandelay-industries.undo-fixes-button.label;" />
+                    </vbox>
+                  </hbox>
+                </vbox>
               </vbox>
               
             </tabpanel>
