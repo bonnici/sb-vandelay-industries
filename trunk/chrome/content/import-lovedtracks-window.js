@@ -206,7 +206,7 @@ LovedTracksImporterDialog.Controller = {
     
     var xml = request.responseXML;
     var tracks = xml.getElementsByTagName('track');
-    
+	
     for (var trackIndex = 0; trackIndex < tracks.length; trackIndex++) {      
       var artistName = VandelayIndustriesShared.Functions.getArtistName(tracks[trackIndex]);
       var trackName = VandelayIndustriesShared.Functions.getTrackName(tracks[trackIndex]);
@@ -362,6 +362,8 @@ LovedTracksImporterDialog.Controller = {
         }
       }
     }
+	
+    alert(this._strings.getString("importLovedTracksDone"));
   },
   
   //todo this could be moved into shared code
