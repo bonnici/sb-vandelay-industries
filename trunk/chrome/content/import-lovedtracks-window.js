@@ -16,12 +16,12 @@ if (typeof LovedTracksImporterDialog == 'undefined') {
   var LovedTracksImporterDialog = {};
 }
 
-const LAST_FM_ROOT_URL = "http://ws.audioscrobbler.com/2.0/";
-const LAST_FM_API_KEY = "72b14fe3e1fd7f8ff8a993b1f1e78a50";
+const VI_LAST_FM_ROOT_URL = "http://ws.audioscrobbler.com/2.0/";
+const VI_LAST_FM_API_KEY = "72b14fe3e1fd7f8ff8a993b1f1e78a50";
 
 const USER_GETLOVEDTRACKS_METHOD = "user.getLovedTracks";
 
-const REQUEST_SUCCESS_CODE = 200
+const VI_REQUEST_SUCCESS_CODE = 200
 
 const LOVED_TRACKS_PLAYLIST_PROP = "vandelay-industries_loved-tracks-playlist";
 
@@ -168,10 +168,10 @@ LovedTracksImporterDialog.Controller = {
   findLovedTracks: function(pageNum) {
   
     var username = document.getElementById("last-fm-username-field").value;
-    var requestUri = LAST_FM_ROOT_URL + "?method=" + USER_GETLOVEDTRACKS_METHOD + 
+    var requestUri = VI_LAST_FM_ROOT_URL + "?method=" + USER_GETLOVEDTRACKS_METHOD + 
                         "&user=" + username + 
                         "&page=" + pageNum +
-                        "&api_key=" + LAST_FM_API_KEY;
+                        "&api_key=" + VI_LAST_FM_API_KEY;
 
     var request = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Ci.nsIXMLHttpRequest);
 
@@ -195,7 +195,7 @@ LovedTracksImporterDialog.Controller = {
       return; 
     }
 
-    if (request.status != REQUEST_SUCCESS_CODE) {
+    if (request.status != VI_REQUEST_SUCCESS_CODE) {
       Cu.reportError(this._strings.getString("lastfmRequestUnsuccessfulError"));
       alert(this._strings.getString("lastfmRequestUnsuccessfulError"));
       return;

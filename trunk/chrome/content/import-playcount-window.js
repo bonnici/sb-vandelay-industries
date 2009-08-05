@@ -18,12 +18,12 @@ if (typeof PlayCountImporterDialog == 'undefined') {
   var PlayCountImporterDialog = {};
 }
 
-const LAST_FM_ROOT_URL = "http://ws.audioscrobbler.com/2.0/";
-const LAST_FM_API_KEY = "72b14fe3e1fd7f8ff8a993b1f1e78a50";
+const VI_LAST_FM_ROOT_URL = "http://ws.audioscrobbler.com/2.0/";
+const VI_LAST_FM_API_KEY = "72b14fe3e1fd7f8ff8a993b1f1e78a50";
 
-const LIBRARY_GETTRACKS_METHOD = "library.getTracks";
+const VI_LIBRARY_GETTRACKS_METHOD = "library.getTracks";
 
-const REQUEST_SUCCESS_CODE = 200
+const VI_REQUEST_SUCCESS_CODE = 200
 
 const NUM_IMPORTS_PER_CALL = 50;
 const NUM_CLEARS_PER_CALL = 200;
@@ -1016,10 +1016,10 @@ PlayCountImporterDialog.Controller = {
   },
   
   _getLibraryPage: function(username, page) {       
-    var requestUri = LAST_FM_ROOT_URL + "?method=" + LIBRARY_GETTRACKS_METHOD + 
+    var requestUri = VI_LAST_FM_ROOT_URL + "?method=" + VI_LIBRARY_GETTRACKS_METHOD + 
                         "&user=" + username +
                         "&page=" + page +
-                        "&api_key=" + LAST_FM_API_KEY;
+                        "&api_key=" + VI_LAST_FM_API_KEY;
 
     var request = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Ci.nsIXMLHttpRequest);
 
@@ -1047,7 +1047,7 @@ PlayCountImporterDialog.Controller = {
       return null; 
     }
 
-    if (request.status != REQUEST_SUCCESS_CODE) {
+    if (request.status != VI_REQUEST_SUCCESS_CODE) {
       Cu.reportError(this._strings.getString("lastfmRequestUnsuccessfulError"));
       alert(this._strings.getString("lastfmRequestUnsuccessfulError"));
       return null;
