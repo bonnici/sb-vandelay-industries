@@ -6,18 +6,11 @@ if (typeof(Cu) == 'undefined')
 	var Cu = Components.utils;
 if (typeof(Cr) == 'undefined')
 	var Cr = Components.results; 
-	
+	  
 // Make a namespace.
 if (typeof VandelayIndustries == 'undefined') {
   var VandelayIndustries = {};
 }
-
-const LAST_FM_ROOT_URL = "http://ws.audioscrobbler.com/2.0/";
-const LAST_FM_API_KEY = "72b14fe3e1fd7f8ff8a993b1f1e78a50";
-
-const LIBRARY_GETTRACKS_METHOD = "library.getTracks";
-
-const REQUEST_SUCCESS_CODE = 200;
 
 /**
  * UI controller that is loaded into the main player window
@@ -37,7 +30,7 @@ VandelayIndustries.Controller =
     }
 
     var controller = this;
-    
+
     this._importPlayCountCmd = document.getElementById("vandelay-industries-importplaycount-cmd");
     this._importPlayCountCmd.addEventListener("command", 
          function() { controller.doImportPlayCount(); }, false);
