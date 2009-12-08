@@ -17,6 +17,9 @@
         <menuitem id="vandelay-industries-importlovedtracks-menuitem"
             label="&vandelay-industries.importlovedtracks-menuitem.label;" 
             command="vandelay-industries-importlovedtracks-cmd" />
+            <menuitem id="vandelay-industries-importglobaltags-menuitem"
+	            label="&vandelay-industries.importglobaltags-menuitem.label;" 
+	            command="vandelay-industries-importglobaltags-cmd" />
       </menupopup>
     </menu>
      
