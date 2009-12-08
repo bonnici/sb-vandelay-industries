@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://vandelay-industries/skin/global.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://vandelay-industries/locale/overlay.dtd">
+
+<window
+    id="import-globaltags-window"
+    title="&vandelay-industries.importglobaltags-menuitem.label;"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    
+    <script src="shared.js" />
+    <script src="import-globaltags-window.js" />
+    
+    <stringbundleset id="stringbundleset"> 
+       <stringbundle id="vandelay-industries-strings" src="chrome://vandelay-industries/locale/overlay.properties"/>
+    </stringbundleset>
+    
+    <vbox flex="1" style="overflow: auto">
+    
+        <hbox id="import-for-hbox">
+            <vbox flex="1">
+                <groupbox orient="horizontal">
+                    <caption label="&vandelay-industries.globaltags.import-for-group.label;" />
+                    <radiogroup flex="1" orient="horizontal">
+                        <radio label="&vandelay-industries.globaltags.import-albumartist-radio.label;" selected="true" id="import-tags-for-album-artist" />
+                        <!-- <radio label="&vandelay-industries.globaltags.import-album-radio.label;" id="import-tags-for-album" /> -->
+                        <radio label="&vandelay-industries.globaltags.import-artist-radio.label;" id="import-tags-for-artist" />
+                    </radiogroup>
+                    <button id="delete-old-playlists-button" label="&vandelay-industries.globaltags.delete-old-playlists-button-label;" width="150" /> 
+                </groupbox>
+            </vbox>
+        </hbox>
+        
+        <hbox id="tag-filter-hbox">
+            <vbox flex="1">
+                <groupbox flex="1">
+                    <caption label="&vandelay-industries.globaltags.tag-filter-group.label;" />
+                    <hbox flex="1">
+                        <vbox flex="1">
+                    
+                            <hbox flex="1">
+                                <tree id="tag-filter-tree" flex="1" hidecolumnpicker="true" sortDirection="descending" sortResource="filter-tag-name-column">
+                                    <treecols>
+                                        <treecol id="filter-tag-name-column" label="&vandelay-industries.globaltags.tag-name-header.label;" flex="1" class="sortDirectionIndicator" onclick="ImportGlobalTagsDialog.Controller.sortTagFilterList(this)" />
+                                    </treecols>
+
+                                    <treechildren/>
+
+                                </tree>
+                            </hbox>
+                            <hbox>
+                                <button flex="1" id="remove-selected-tag-button" label="&vandelay-industries.globaltags.remove-selected-tags-button-label;" />
+                                <button flex="1" id="remove-all-tags-button" label="&vandelay-industries.globaltags.remove-all-tags-button-label;" />
+                            </hbox>
+                    
+                        </vbox>
+                        <vbox>
+                            <groupbox>
+                                <caption label="&vandelay-industries.globaltags.filter-action-group.label;" />
+                                <radiogroup>
+                                    <radio label="&vandelay-industries.globaltags.ignore-radio.label;" selected="true" id="filter-action-ignore" />
+                                    <radio label="&vandelay-industries.globaltags.import-only-radio.label;" id="filter-action-only" />
+                                </radiogroup>
+                            </groupbox>
+                            <spacer flex="1" />
+                            <vbox>
+                                <menulist id="add-tag-menu">
+                                    <menupopup>
+                                        <menuitem label="&vandelay-industries.globaltags.add-tag-choice.label;" selected="true" id="add-tag-choice" />
+                                        <menuitem label="&vandelay-industries.globaltags.add-top-tags-choice.label;" id="add-top-tags-choice" />
+                                        <menuitem label="&vandelay-industries.globaltags.add-common-ignore-choice.label;" id="add-common-ignore-choice" />
+                                    </menupopup>
+                                </menulist>
+                                
+                                <hbox align="center" pack="end">
+                                    <label id="add-tag-textbox-label" />
+                                    <textbox flex="1" id="add-tag-textbox" width="20" />
+                                    <button id="add-tag-button" label="&vandelay-industries.globaltags.add-tag-button-label;" />
+                                </hbox>
+                            </vbox>
+                        </vbox>
+                    </hbox>
+                </groupbox>
+            </vbox>
+        </hbox>
+        
+        <hbox id="find-tag-hbox" align="center">
+            <spacer flex="1" />
+            <label value="&vandelay-industries.globaltags.use-top-tags-start.label;" />
+            <textbox id="find-x-tags-textbox" type="number" min="1" max="100" increment="1" value="3" width="35" />
+            <label value="&vandelay-industries.globaltags.use-top-tags-end.label;" />
+            <spacer width="15" />
+            <button id="find-tags-button" label="&vandelay-industries.globaltags.find-tags-button-label;" width="150" /> 
+            <spacer width="10" />
+        </hbox>
+        
+        <hbox flex="1" id="tag-results-hbox">
+            <vbox flex="1">
+                <groupbox flex="1">
+                    <caption label="&vandelay-industries.globaltags.results-group.label;" />
+                    <!--
+                    <radiogroup orient="horizontal">
+                        <radio id="group-by-tag-radio" label="&vandelay-industries.globaltags.group-by-tag-radio.label;" selected="true" />
+                        <radio id="group-by-item-radio" />
+                    </radiogroup>
+                    -->
+                    <hbox flex="1">
+                        <vbox flex="1">
+                            <tree id="tag-tree" flex="1" hidecolumnpicker="true" sortDirection="descending" sortResource="import-tag-name-column" seltype="single" editable="true" onselect="ImportGlobalTagsDialog.Controller.onTagTreeSelection(event);">
+                                <treecols>
+                                    <treecol id="import-tag-checkbox-column" label="&vandelay-industries.globaltags.import-header.label;" type="checkbox" editable="true" class="sortDirectionIndicator" onclick="ImportGlobalTagsDialog.Controller.sortTagResultsTagList(this)" />
+                                    <splitter class="tree-splitter" />
+                                    <treecol id="import-tag-name-column" label="&vandelay-industries.globaltags.tag-name-header.label;" flex="1" class="sortDirectionIndicator" onclick="ImportGlobalTagsDialog.Controller.sortTagResultsTagList(this)" />
+                                </treecols>
+
+                                <treechildren/>
+
+                            </tree>
+                        </vbox>
+                        <vbox flex="1">
+                            <tree id="item-tree" flex="1" hidecolumnpicker="true" sortDirection="descending" sortResource="import-item-lib-name-column" seltype="single" editable="true">
+                                <treecols>
+                                    <treecol id="import-item-column" label="&vandelay-industries.globaltags.import-header.label;" type="checkbox" editable="true" class="sortDirectionIndicator" onclick="ImportGlobalTagsDialog.Controller.sortTagResultsItemList(this)" />
+                                    <splitter class="tree-splitter" />
+                                    <treecol id="import-item-lib-name-column" label="&vandelay-industries.globaltags.import-lib-item-name-header.label;" flex="1" class="sortDirectionIndicator" onclick="ImportGlobalTagsDialog.Controller.sortTagResultsItemList(this)" />
+                                    <!-- <splitter class="tree-splitter" />
+                                    <treecol id="import-item-lfm-name-column" label="&vandelay-industries.globaltags.import-lfm-item-name-header.label;" flex="1" /> -->
+                                </treecols>
+
+                                <treechildren/>
+
+                            </tree>
+                        </vbox>
+                    </hbox>
+                </groupbox>
+            </vbox>
+        </hbox>
+        
+        <hbox id="import-tags-hbox" align="center">
+            <spacer flex="1" />
+            <!-- <checkbox id="create-untagged-playlist-checkbox" label="&vandelay-industries.globaltags.create-untagged-playlist.label;" checked="true"/> -->
+            <spacer width="15" />
+            <button id="import-tags-button" label="&vandelay-industries.globaltags.import-tags-button-label;" width="150" /> 
+            <spacer width="10" />            
+        </hbox>
+        
+    </vbox>
+    
+    <statusbar>
+      <statusbarpanel id="status-label" flex="1" />
+      <progressmeter id="progress-meter" mode="determined" width="100" />
+      <spacer width="15" /> <!-- Space for the resize thingy -->
+    </statusbar>
+</window>
