@@ -10,10 +10,10 @@ menulist
 
 treechildren::-moz-tree-cell-text(matchedText)
 {
-  color: green;
+  color: #90FF90;
 }
 
 treechildren::-moz-tree-cell-text(unmatchedText)
 {
-  color: red;
+  color: #FF9090;
 }
