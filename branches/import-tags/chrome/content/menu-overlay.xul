@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://vandelay-industries/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://vandelay-industries/locale/overlay.dtd">
+<overlay id="vandelay-industries-menu-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+  <!-- Target the tools menu -->
+  <menupopup id="menu_ToolsPopup"> 
+
+    <!-- Add a menu item -->  
+    <menuseparator />
+    <menu label="&vandelay-industries.main-menu.label;">
+      <menupopup id="vandelay-menu-popup">
+        <menuitem id="vandelay-industries-importplaycount-menuitem"
+            label="&vandelay-industries.importplaycount-menuitem.label;" 
+            command="vandelay-industries-importplaycount-cmd" />
+        <menuitem id="vandelay-industries-importlovedtracks-menuitem"
+            label="&vandelay-industries.importlovedtracks-menuitem.label;" 
+            command="vandelay-industries-importlovedtracks-cmd" />
+            <menuitem id="vandelay-industries-importglobaltags-menuitem"
+	            label="&vandelay-industries.importglobaltags-menuitem.label;" 
+	            command="vandelay-industries-importglobaltags-cmd" />
+      </menupopup>
+    </menu>
+     
+  </menupopup>
+
+</overlay>

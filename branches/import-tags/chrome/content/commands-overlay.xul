@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://vandelay-industries/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://vandelay-industries/locale/overlay.dtd">
+<overlay id="vandelay-industries-menu-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+  <commandset id="mainCommandSet">
+    <command id="vandelay-industries-importplaycount-cmd"  />
+    <command id="vandelay-industries-importlovedtracks-cmd"  />
+    <command id="vandelay-industries-importglobaltags-cmd" />
+  </commandset>
+  
+</overlay>

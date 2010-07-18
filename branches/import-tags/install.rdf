@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+     xmlns:songbird="http://www.songbirdnest.com/2007/addon-metadata-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>vandelay-industries@songbirdnest.com</em:id>
+    <em:type>2</em:type>
+    <em:name>Vandelay Industries</em:name>
+    <em:version>2.0.0</em:version>
+    <em:creator>Nick Marsh</em:creator>
+
+    <em:description>Dealing mainly in imports and exports. Vandelay Industries lets you import play counts, metadata, and loved tracks from last.fm.</em:description>
+    
+    <em:homepageURL>http://addons.songbirdnest.com/addons/1458</em:homepageURL>
+    <em:iconURL>chrome://vandelay-industries/skin/vandelay-icon.png</em:iconURL>
+    
+    <em:targetApplication>
+      <Description>
+        <em:id>songbird@songbirdnest.com</em:id>
+        <em:minVersion>1.2.0</em:minVersion>
+        <em:maxVersion>1.4.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
