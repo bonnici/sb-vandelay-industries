@@ -39,10 +39,6 @@ VandelayIndustries.Controller =
     this._importLovedTracksCmd.addEventListener("command", 
          function() { controller.doImportLovedTracks(); }, false);
 
-    this._importGlobalTagsCmd = document.getElementById("vandelay-industries-importglobaltags-cmd");
-    this._importGlobalTagsCmd.addEventListener("command", 
-         function() { controller.doImportGlobalTags(); }, false);
-
   },
 
   onUnLoad: function() 
@@ -67,16 +63,6 @@ VandelayIndustries.Controller =
       "chrome://vandelay-industries/content/import-lovedtracks-window.xul", 
       "import-lovedtracks-window", 
       "chrome,centerscreen,width=450,height=500,resizable=yes"
-    );
-  },
-
-  doImportGlobalTags : function() 
-  {
-    window.open
-    (
-      "chrome://vandelay-industries/content/import-globaltags-window.xul", 
-      "import-globaltags-window", 
-      "chrome,centerscreen,width=550,height=580,resizable=yes"
     );
   },
 

@@ -45,33 +45,3 @@
 <!ENTITY vandelay-industries.lovedtracks.import-button-label "Import">
 <!ENTITY vandelay-industries.lovedtracks.remove-button-label "Remove">
 <!ENTITY vandelay-industries.select-all-checkbox.label "Select All">
-
-<!ENTITY vandelay-industries.importglobaltags-menuitem.label "Import Tags">
-<!ENTITY vandelay-industries.globaltags.import-for-group.label "Import Tags For">
-<!ENTITY vandelay-industries.globaltags.import-albumartist-radio.label "Album Artists">
-<!ENTITY vandelay-industries.globaltags.import-album-radio.label "Albums">
-<!ENTITY vandelay-industries.globaltags.import-artist-radio.label "Artists">
-<!ENTITY vandelay-industries.globaltags.tag-filter-group.label "Tag Filter">
-<!ENTITY vandelay-industries.globaltags.use-top-tags-start.label "Find the top">
-<!ENTITY vandelay-industries.globaltags.use-top-tags-end.label "tags for each item">
-<!ENTITY vandelay-industries.globaltags.find-tags-button-label "Find Tags">
-<!ENTITY vandelay-industries.globaltags.results-group.label "Tags">
-<!ENTITY vandelay-industries.globaltags.import-tags-button-label "Import as Playlists">
-<!ENTITY vandelay-industries.globaltags.create-untagged-playlist.label "Create playlist for untagged items">
-<!ENTITY vandelay-industries.globaltags.ignore-radio.label "Ignore tags in the list">
-<!ENTITY vandelay-industries.globaltags.import-only-radio.label "Only import tags in the list">
-<!ENTITY vandelay-industries.globaltags.add-tag-button-label "Add">
-<!ENTITY vandelay-industries.globaltags.add-top-tag-button-label "Add Top Tags">
-<!ENTITY vandelay-industries.globaltags.tag-name-header.label "Tag Name">
-<!ENTITY vandelay-industries.globaltags.group-by-tag-radio.label "Group by Tag">
-<!ENTITY vandelay-industries.globaltags.import-header.label "Import?">
-<!ENTITY vandelay-industries.globaltags.import-lib-item-name-header.label "Library Name">
-<!ENTITY vandelay-industries.globaltags.import-lfm-item-name-header.label "Last.fm Name">
-<!ENTITY vandelay-industries.globaltags.filter-action-group.label "Filter Action">
-<!ENTITY vandelay-industries.globaltags.remove-selected-tags-button-label "Remove Selected">
-<!ENTITY vandelay-industries.globaltags.remove-all-tags-button-label "Remove All">
-<!ENTITY vandelay-industries.globaltags.add-tag-button-label "Add">
-<!ENTITY vandelay-industries.globaltags.add-tag-choice.label "Add user-defined tag" >
-<!ENTITY vandelay-industries.globaltags.add-top-tags-choice.label "Add global top tags" >
-<!ENTITY vandelay-industries.globaltags.add-common-ignore-choice.label "Add commonly ignored tags" >
-<!ENTITY vandelay-industries.globaltags.delete-old-playlists-button-label "Delete Old Playlists">
