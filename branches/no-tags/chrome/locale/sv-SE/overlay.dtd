@@ -1,0 +1,47 @@
+<!ENTITY vandelay-industries.window-title "Importera &quot;Antal spelningar&quot; och metadata från Last.fm">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Importera &quot;Antal spelningar&quot; och metadata från Last.fm">
+<!ENTITY vandelay-industries.find-playcount-group.label "Hämta biblioteksdata">
+<!ENTITY vandelay-industries.lastfm-username.label "Användarnamn på Last.fm:">
+<!ENTITY vandelay-industries.resume-search.label "Fortsätt">
+<!ENTITY vandelay-industries.artist-header.label "Artist">
+<!ENTITY vandelay-industries.title-header.label "Titel">
+<!ENTITY vandelay-industries.playcount-header.label "Antal spelningar">
+<!ENTITY vandelay-industries.inlibrary-header.label "I biblioteket">
+<!ENTITY vandelay-industries.importquestion-header.label "Importera?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Hämta biblioteksdata från Last.fm">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Ersätt endast &quot;Antal spelningar&quot; om antalet är större än det aktuella antalet spelningar">
+<!ENTITY vandelay-industries.update-first-match.label "Uppdatera endast antalet spelningar för det första matchande spåret i biblioteket">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Återställ &quot;Antal spelningar&quot;">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Varning: Detta kommer att radera antalet spelningar för samtliga spår i ditt bibliotek">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Artist (Last.fm)">
+<!ENTITY vandelay-industries.lfm-title-header.label "Titel (Last.fm)">
+<!ENTITY vandelay-industries.lib-artist-header.label "Artist (Bibliotek)">
+<!ENTITY vandelay-industries.lib-title-header.label "Titel (Bibliotek)">
+<!ENTITY vandelay-industries.edit-artist.label "Artist:">
+<!ENTITY vandelay-industries.edit-title.label "Titel:">
+<!ENTITY vandelay-industries.remove-button.label "Ta bort">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Visa åtgärdade spår">
+<!ENTITY vandelay-industries.auto-fix-button.label "Autoåtgärda alla">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Importera &quot;Antal spelningar&quot;">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Rensa &quot;Antal spelningar&quot;">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Åtgärda metadata">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Åtgärda artister globalt">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "Om detta alternativ har kryssats för, så korrigeras artisttaggarna för samtliga spår med den feltaggade artisten när ett enskilt spår åtgärdas, även om spåret inte står med i listan. ">
+<!ENTITY vandelay-industries.fix-tags-button.label "Åtgärda taggar">
+<!ENTITY vandelay-industries.add-to-existing.label "Addera nya siffror till befintligt spelningsantal istället för att ersätta dem">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Obs.: Endast spåren under fliken &quot;Hittades inte i biblioteket&quot; som har &quot;Importera?&quot;-kolumnen ikryssad kommer att uppdateras. Dessa ändringar kommer endast att skrivas till ditt bibliotek och sparas inte till fil.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "Autoåtgärda markerade">
+<!ENTITY vandelay-industries.undo-fixes-button.label "Återställ alla">
+<!ENTITY vandelay-industries.save-to-file-button.label "Spara till fil">
+<!ENTITY vandelay-industries.save-to-file-tab.label "Spara metadata till fil">
+<!ENTITY vandelay-industries.save-all-files-checkbox.label "Spara alla filer">
+<!ENTITY vandelay-industries.save-all-files-desc.label "Om detta alternativ har kryssats för, så kommer metadatan att skrivas till alla filer i ditt bibliotek istället för endast till filerna under fliken &quot;Hittades inte i biblioteket&quot;. Om du vill åtgärda artisttaggar globalt, säkerställ att denna ruta har kryssats i.">
+<!ENTITY vandelay-industries.save-to-file-desc.label "Obs.: Detta kommer med permanent verkan att spara artist- och spårnamn - som de anges i ditt bibliotek - till fil, vilket inte kan ångras. Det rekommenderas att du säkerhetskopierar din musiksamling innan du gör det här.">
+<!ENTITY vandelay-industries.main-menu.label "Vandelay Industries">
+<!ENTITY vandelay-industries.importlovedtracks-menuitem.label "Importera älskade spår">
+<!ENTITY vandelay-industries.lovedtracks.username-group.label "Användarnamn på Last.fm">
+<!ENTITY vandelay-industries.lovedtracks.go-button-label "Starta">
+<!ENTITY vandelay-industries.lovedtracks.loved-tracks-group.label "Älskade spår">
+<!ENTITY vandelay-industries.lovedtracks.import-button-label "Importera">
+<!ENTITY vandelay-industries.lovedtracks.remove-button-label "Ta bort">
+<!ENTITY vandelay-industries.select-all-checkbox.label "Markera alla">
