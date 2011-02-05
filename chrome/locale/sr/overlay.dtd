@@ -1,0 +1,47 @@
+<!ENTITY vandelay-industries.window-title "Увези Last.fm репродуковања и метаподатке">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Увези Last.fm репродуковања и метаподатке">
+<!ENTITY vandelay-industries.find-playcount-group.label "Преузми податке о библиотеци">
+<!ENTITY vandelay-industries.lastfm-username.label "Last.fm Корисничко име:">
+<!ENTITY vandelay-industries.resume-search.label "Настави">
+<!ENTITY vandelay-industries.artist-header.label "Извођач">
+<!ENTITY vandelay-industries.title-header.label "Наслов">
+<!ENTITY vandelay-industries.playcount-header.label "Број репродуковања">
+<!ENTITY vandelay-industries.inlibrary-header.label "У библиотеци">
+<!ENTITY vandelay-industries.importquestion-header.label "Увести?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Преузми Last.fm податке о библиотеци">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Замени број репродуковања само ако има вие од тренутног">
+<!ENTITY vandelay-industries.update-first-match.label "Ажурирај број репродуковања прве песме у библиотеци која се поклапа">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Поништи број репродуковања">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Упозорење: Ово ће обрисати број репродуковања сваке песме у Вашој библиотеци">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Last.fm извођач">
+<!ENTITY vandelay-industries.lfm-title-header.label "Last.fm наслов">
+<!ENTITY vandelay-industries.lib-artist-header.label "Извођач библиотеке">
+<!ENTITY vandelay-industries.lib-title-header.label "Наслов библиотеке">
+<!ENTITY vandelay-industries.edit-artist.label "Извођач:">
+<!ENTITY vandelay-industries.edit-title.label "Наслов:">
+<!ENTITY vandelay-industries.remove-button.label "Уклони">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Прикажи исправљене нумере">
+<!ENTITY vandelay-industries.auto-fix-button.label "Аутоматски исправи све">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Увези број репродуковања">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Очисти број репродуковања">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Исправи метаподатке">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Исправи извођаче">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "Ако је ова опција штриклирана, сваки пут када је нумера исправљена, ознака извођача свих нумера с погрешним извођачем биће исправљена, иако се та одређена нумера не појављује у списку.">
+<!ENTITY vandelay-industries.fix-tags-button.label "Исправи ознаке">
+<!ENTITY vandelay-industries.add-to-existing.label "Додај број репродуковања на већ постојећи уместо замењивања">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Напомена: Само песме у картици „Није пронађено у библиотеци“ које имају штриклирани колону „Увести?“ биће ажуриране. Ове измене биће записане само у Вашој библиотеци и нису сачуване на датотеци.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "Аутоматски исправи изабрано">
+<!ENTITY vandelay-industries.undo-fixes-button.label "Поништи све">
+<!ENTITY vandelay-industries.save-to-file-button.label "Сачувај у датотеку">
+<!ENTITY vandelay-industries.save-to-file-tab.label "Сачувај метаподатке у датотеку">
+<!ENTITY vandelay-industries.save-all-files-checkbox.label "Сачувај све датотеке">
+<!ENTITY vandelay-industries.save-all-files-desc.label "Ако је ова опција означена, метаподаци биће записани на све датотеке у Вашој библиотеци уместо само на језичку „Није пронађено у библиотеци“. Ако желите да исправите означе извођача, проверите да ли је ова кућица штриклирана.">
+<!ENTITY vandelay-industries.save-to-file-desc.label "Напомена: Ово ће сачувати извођача и назив нумере онако како је у библиотеци приказано. Радња се не може повратити. Препоручујемо вам да направите резерву своје музике пре него што ово урадите.">
+<!ENTITY vandelay-industries.main-menu.label "Vandelay Industries">
+<!ENTITY vandelay-industries.importlovedtracks-menuitem.label "Увези омиљене нумере">
+<!ENTITY vandelay-industries.lovedtracks.username-group.label "Last.fm корисничко име">
+<!ENTITY vandelay-industries.lovedtracks.go-button-label "Напред">
+<!ENTITY vandelay-industries.lovedtracks.loved-tracks-group.label "Омиљене нумере">
+<!ENTITY vandelay-industries.lovedtracks.import-button-label "Увези">
+<!ENTITY vandelay-industries.lovedtracks.remove-button-label "Уклони">
+<!ENTITY vandelay-industries.select-all-checkbox.label "Изабери све">

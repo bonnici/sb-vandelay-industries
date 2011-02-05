@@ -1,0 +1,47 @@
+<!ENTITY vandelay-industries.window-title "Importar Números de Execuções e Metadados da Last.fm">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Importar Números de Execuções e Metadados da Last.fm">
+<!ENTITY vandelay-industries.find-playcount-group.label "Obter Dados da Biblioteca">
+<!ENTITY vandelay-industries.lastfm-username.label "Nome de utilizador da Last.fm:">
+<!ENTITY vandelay-industries.resume-search.label "Continuar">
+<!ENTITY vandelay-industries.artist-header.label "Artista">
+<!ENTITY vandelay-industries.title-header.label "Título">
+<!ENTITY vandelay-industries.playcount-header.label "Número de Execuções">
+<!ENTITY vandelay-industries.inlibrary-header.label "Na Biblioteca">
+<!ENTITY vandelay-industries.importquestion-header.label "Importar?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Obter Dados da Biblioteca da Last.fm">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Alterar número de execuções apenas se for superior à contagem actual">
+<!ENTITY vandelay-industries.update-first-match.label "Actualizar apenas o número de execuções da primeira canção correspondente encontrada na biblioteca">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Colocar a Zero o Número de Execuções">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Aviso: Isto irá apagar o número de execuções de todas as canções na sua biblioteca">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Artista (Last.fm)">
+<!ENTITY vandelay-industries.lfm-title-header.label "Título (Last.fm)">
+<!ENTITY vandelay-industries.lib-artist-header.label "Artista (Biblioteca)">
+<!ENTITY vandelay-industries.lib-title-header.label "Título (Biblioteca)">
+<!ENTITY vandelay-industries.edit-artist.label "Artista:">
+<!ENTITY vandelay-industries.edit-title.label "Título:">
+<!ENTITY vandelay-industries.remove-button.label "Remover">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Mostrar Faixas Reparadas">
+<!ENTITY vandelay-industries.auto-fix-button.label "Reparar Tudo Automaticamente">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Importar Número de Execuções">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Limpar Número de Execuções">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Reparar Metadados">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Reparar Todos os Artistas">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "Se esta opção estiver seleccionada, de cada vez que uma faixa for reparada, as etiquetas (tags) de todas as faixas desse artista serão corrigidas, mesmo que essa faixa não apareça na lista.">
+<!ENTITY vandelay-industries.fix-tags-button.label "Reparar Etiquetas (Tags)">
+<!ENTITY vandelay-industries.add-to-existing.label "Adicionar contagem de execuções em vez de substituí-las">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Nota: Apenas serão actualizadas as canções no separador «Não Encontrado na Biblioteca» que possuam a coluna «Importar?» seleccionada. Estas alterações serão apenas escritas na sua biblioteca, e não serão guardadas num documento.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "Auto-Reparar Seleccionado">
+<!ENTITY vandelay-industries.undo-fixes-button.label "Reiniciar Tudo">
+<!ENTITY vandelay-industries.save-to-file-button.label "Gravar em Documento">
+<!ENTITY vandelay-industries.save-to-file-tab.label "Gravar Metadados em Documento">
+<!ENTITY vandelay-industries.save-all-files-checkbox.label "Gravar todos os documentos">
+<!ENTITY vandelay-industries.save-all-files-desc.label "Se esta opção estiver seleccionada, os metadados serão gravados em todos os documentos na sua biblioteca, e não apenas nos que se encontram no separador «Não Encontrado na Biblioteca». Se pretende reparar a totalidade das etiquetas de artistas, esta caixa deve estar seleccionada.">
+<!ENTITY vandelay-industries.save-to-file-desc.label "Nota: Esta acção irá gravar de forma permanente os nomes de artistas e faixas tal como surgem na sua biblioteca, e não pode ser revertida. Recomenda-se que faça um backup da sua colecção de música antes de usar esta opção.">
+<!ENTITY vandelay-industries.main-menu.label "Vandelay Industries">
+<!ENTITY vandelay-industries.importlovedtracks-menuitem.label "Importar Faixar Favoritas">
+<!ENTITY vandelay-industries.lovedtracks.username-group.label "Nome de Utilizador na Last.fm">
+<!ENTITY vandelay-industries.lovedtracks.go-button-label "Avançar">
+<!ENTITY vandelay-industries.lovedtracks.loved-tracks-group.label "Faixas Favoritas">
+<!ENTITY vandelay-industries.lovedtracks.import-button-label "Importar">
+<!ENTITY vandelay-industries.lovedtracks.remove-button-label "Remover">
+<!ENTITY vandelay-industries.select-all-checkbox.label "Seleccionar Tudo">

@@ -1,0 +1,47 @@
+<!ENTITY vandelay-industries.window-title "Anzahl der Wiedergaben und Metadaten von Last.fm importieren">
+<!ENTITY vandelay-industries.importplaycount-menuitem.label "Anzahl der Wiedergaben und Metadaten von Last.fm importieren">
+<!ENTITY vandelay-industries.find-playcount-group.label "Bibliotheksdaten erhalten">
+<!ENTITY vandelay-industries.lastfm-username.label "Last.fm-Benutzername:">
+<!ENTITY vandelay-industries.resume-search.label "Zusammenfassung">
+<!ENTITY vandelay-industries.artist-header.label "Künstler">
+<!ENTITY vandelay-industries.title-header.label "Titel">
+<!ENTITY vandelay-industries.playcount-header.label "Anzahl der Wiedergaben">
+<!ENTITY vandelay-industries.inlibrary-header.label "In der Bibliothek">
+<!ENTITY vandelay-industries.importquestion-header.label "Importieren?">
+<!ENTITY vandelay-industries.import-playcount-group.label "Last.fm-Bibliotheksdaten erhalten">
+<!ENTITY vandelay-industries.overwrite-if-greater.label "Anzahl der Wiedergaben nur überschreiben, wenn es mehr als die aktuelle Anzahl ist">
+<!ENTITY vandelay-industries.update-first-match.label "Nur die Wiedergabeanzahl des ersten passenden Liedes in der Bibliothek anpassen">
+<!ENTITY vandelay-industries.reset-playcount-group.label "Wiedergabeanzahl zurücksetzen">
+<!ENTITY vandelay-industries.reset-playcount-warning.label "Achtung: Dies wird die Wiedergabeanzahl jedes Liedes in der Bibliothek auf 0 zurücksetzen">
+<!ENTITY vandelay-industries.lfm-artist-header.label "Last.fm Künstler">
+<!ENTITY vandelay-industries.lfm-title-header.label "Last.fm Titel">
+<!ENTITY vandelay-industries.lib-artist-header.label "Bibliothek Künstler">
+<!ENTITY vandelay-industries.lib-title-header.label "Bibliothek Titel">
+<!ENTITY vandelay-industries.edit-artist.label "Künstler:">
+<!ENTITY vandelay-industries.edit-title.label "Titel:">
+<!ENTITY vandelay-industries.remove-button.label "Entfernen">
+<!ENTITY vandelay-industries.show-fixed-checkbox.label "Veränderte Lieder zeigen">
+<!ENTITY vandelay-industries.auto-fix-button.label "Alle automatisch ersetzen">
+<!ENTITY vandelay-industries.import-playcount-tab.label "Anzahl der Wiedergaben importieren">
+<!ENTITY vandelay-industries.clear-playcount-tab.label "Anzahl der Wiedergaben löschen">
+<!ENTITY vandelay-industries.fix-metadata-tab.label "Metadaten ersetzen">
+<!ENTITY vandelay-industries.globally-fix-artist-checkbox.label "Künstler global ersetzen">
+<!ENTITY vandelay-industries.globally-fix-artist-desc.label "Wenn diese Option aktiviert ist, werden jedes mal, wenn ein Lied korrigiert wird, alle derart falsch gesetzten Tags dieses Künstlers korrigiert, auch wenn das entsprechende Lied nicht in der Liste auftaucht.">
+<!ENTITY vandelay-industries.fix-tags-button.label "Tags ersetzen">
+<!ENTITY vandelay-industries.add-to-existing.label "Wiedergabeanzahl zu den bestehenden Zählern hinzufügen anstatt Sie zu überschreiben">
+<!ENTITY vandelay-industries.fix-metadata-note-desc.label "Achtung: Nur die Lieder in der 'Nicht in Bibliothek gefunden'-Registerkarte, welche  den 'Importieren?'-Haken gesetzt haben, werden aktualisiert. Diese Änderungen werden nur in die Bibliothek geschrieben und nicht in der Datei gespeichert.">
+<!ENTITY vandelay-industries.auto-fix-single-button.label "automatisch korrigieren">
+<!ENTITY vandelay-industries.undo-fixes-button.label "Alle zurücksetzen">
+<!ENTITY vandelay-industries.save-to-file-button.label "In die Datei speichern">
+<!ENTITY vandelay-industries.save-to-file-tab.label "Metadaten in die Datei speichern">
+<!ENTITY vandelay-industries.save-all-files-checkbox.label "Alle Dateien speichern">
+<!ENTITY vandelay-industries.save-all-files-desc.label "Wenn diese Option ausgewählt ist, werden die Metadaten in alle Dateien der Bibliothek geschrieben anstatt nur in die der 'Nicht in Bibliothek gefunden'-Registerkarte. Wenn die Künstler-Tags global ersetzt werden sollen, muss diese Option gewählt sein.">
+<!ENTITY vandelay-industries.save-to-file-desc.label "Achtung: Dies wird den Künstler und Liednamen, wie er in der Bibliothek erscheint, dauerhaft in der Datei speichern und kann nicht rückgängig gemacht werden! Es wird empfohlen die Musiksammlung zu sichern bevor dies angewendet wird.">
+<!ENTITY vandelay-industries.main-menu.label "Vandelay Industries">
+<!ENTITY vandelay-industries.importlovedtracks-menuitem.label "Lieblingslieder importieren">
+<!ENTITY vandelay-industries.lovedtracks.username-group.label "Last.fm Benutzername">
+<!ENTITY vandelay-industries.lovedtracks.go-button-label "Auf geht's">
+<!ENTITY vandelay-industries.lovedtracks.loved-tracks-group.label "Lieblingslieder">
+<!ENTITY vandelay-industries.lovedtracks.import-button-label "Importieren">
+<!ENTITY vandelay-industries.lovedtracks.remove-button-label "Entfernen">
+<!ENTITY vandelay-industries.select-all-checkbox.label "Alle auswählen">
