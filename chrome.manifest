@@ -1,5 +1,9 @@
 content vandelay-industries  chrome/content/
 locale  vandelay-industries  en-US  chrome/locale/en-US/
+locale  vandelay-industries  de  chrome/locale/de/
+locale  vandelay-industries  pt-PT  chrome/locale/pt-PT/
+locale  vandelay-industries  sr  chrome/locale/sr/
+locale  vandelay-industries  sv-SE  chrome/locale/sv-SE/
 skin    vandelay-industries  classic/1.0 chrome/skin/
 
 overlay chrome://songbird/content/xul/layoutWithBrowserOverlay.xul chrome://vandelay-industries/content/scripts-overlay.xul
